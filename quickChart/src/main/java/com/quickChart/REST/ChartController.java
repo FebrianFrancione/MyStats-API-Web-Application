@@ -45,9 +45,9 @@ public class ChartController implements WebMvcConfigurer {
 
 
     @PostMapping( "/create")
-    public String createNewAlbum(Model model, @RequestParam int width, @RequestParam int height, @RequestParam String chartType) throws IOException {
+    public String createNewAlbum(Model model, @RequestParam String title, @RequestParam int width, @RequestParam int height, @RequestParam String chartType) throws IOException {
 
-        String chartUrl = chartService.createChart(width, height, chartType);
+        String chartUrl = chartService.createChart(title, width, height, chartType);
         model.addAttribute("posted", true);
         model.addAttribute("chartUrl", chartUrl);
         return "CreateChart";

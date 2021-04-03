@@ -13,7 +13,7 @@ public class ChartServiceImpl implements ChartService{
     }
 
     @Override
-    public String createChart(int width, int height, String type){
+    public String createChart(String title, int width, int height, String type){
 
         //For now I create a random chart
         QuickChart chart = new QuickChart();
@@ -27,6 +27,12 @@ public class ChartServiceImpl implements ChartService{
                 + "            label: 'Labels',"
                 + "            data: [9, 88, 31, 475]"
                 + "        }]"
+                + "    },"
+                + "    options: {"
+                + "        title: {"
+                + "            display: true,"
+                + "            text: '"+ title +"'"
+                + "        }"
                 + "    }"
                 + "}"
         );

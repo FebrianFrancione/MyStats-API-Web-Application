@@ -25,6 +25,7 @@
 
         <div class="create">
             <form class="create-form" action="#" method="post" th:action="@{/chart/create}">
+                <input placeholder="title" type="text" name="title" />
                 <input placeholder="width" type="text" name="width" />
                 <input placeholder="height" type="text" name="height" />
                 <select id="chartType" class="form-control" name="chartType">
@@ -40,6 +41,9 @@
         <div class="result" th:if = "${posted}">
             <p class="message">Created new chart!</p>
             <p class="message"> chart URL :  <span th:text="${chartUrl}"></span></p>
+            <div class="message">
+                <img class='img-thumbnail' style=" width: 800px;height: 500px; object-fit: fill;" th:src="${chartUrl}" alt="Chart"/>
+            </div>
         </div>
     </div>
 </section>
