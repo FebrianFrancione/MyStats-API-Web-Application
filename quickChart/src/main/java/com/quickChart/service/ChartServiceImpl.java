@@ -1,5 +1,8 @@
 package com.quickChart.service;
+import com.quickChart.entity.Chart;
 import com.quickChart.persistence.StatsDAO;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import io.quickchart.QuickChart;
 
@@ -18,63 +21,88 @@ public class ChartServiceImpl implements ChartService{
     }
 
     @Override
-    public String createChart(String title, int width, int height, String type){
+    public String createChart(Chart chart){
 
-        //Adding fake data to DB for now
-        //We will have to get these values from html page through REST controller
+        String labels = setLabels(chart.getLabels());
+        String label = "Label";
+        String border_color = "#F28E2B";
+        String background_color = "#F28E2B33";
+        String dataSets = setDataset(chart.getDataSet(), label, border_color, background_color);
 
-        ArrayList<String> labels = new ArrayList<>();
-        labels.add("label1");
-        labels.add("label2");
-        labels.add("label3");
-        labels.add("label4");
-
-        ArrayList<Integer> data = new ArrayList<>();
-        data.add(9);
-        data.add(88);
-        data.add(31);
-        data.add(400);
-
-        String label = "Dataset label";
-        String border_color = "#4E79A7";
-        String background_color = "#4E79A733";
-
-        //For now I create a random chart
-        QuickChart chart = new QuickChart();
-        chart.setWidth(width);
-        chart.setHeight(height);
-        chart.setConfig("{"
-                + "    type: '"+ type +"',"
+        QuickChart Quickchart = new QuickChart();
+        Quickchart.setWidth(chart.getWidth());
+        Quickchart.setHeight(chart.getHeight());
+        Quickchart.setConfig("{"
+                + "    type: '"+ chart.getType() +"',"
                 + "    data: {"
-                + "        labels: ['label1', 'label2', 'Label3', 'label4'],"
-                + "        datasets: [{"
-                + "            label: 'Labels',"
-                + "            data: [9, 88, 31, 475]"
-                + "        }]"
+                +          labels
+                + "        datasets: ["
+                +               dataSets
+                + "        ]"
                 + "    },"
                 + "    options: {"
                 + "        title: {"
                 + "            display: true,"
-                + "            text: '"+ title +"'"
+                + "            text: '"+ chart.getTitle() +"'"
                 + "        }"
                 + "    }"
                 + "}"
         );
 
-        String chartUrl = chart.getShortUrl();
-        int chartId = statsDao.addChart(title, chartUrl, type, width, height);
+        String chartUrl = Quickchart.getShortUrl();
+        int chartId = statsDao.addChart(chart.getTitle(), chartUrl, chart.getType(), chart.getWidth(), chart.getHeight());
 
         if(chartId >= 1) {
             System.out.println("Chart has been created with ID " + chartId);
-            statsDao.addLabels(labels, chartId);
-            int dataset_id = statsDao.addDataset(chartId, label, type, border_color, background_color);
+            statsDao.addLabels(chart.getLabels(), chartId);
+            int dataset_id = statsDao.addDataset(chartId, label, chart.getType(), border_color, background_color);
             if(dataset_id >= 1){
                 System.out.println("Dataset has been created with ID " + dataset_id);
-                statsDao.addData(data, dataset_id);
+                statsDao.addData(chart.getDataSet(), dataset_id);
             }
 
         }
 
         return chartUrl;
+    }
+
+    public String setLabels(ArrayList<String> labelsList){
+        StringBuilder labels = new StringBuilder();
+        labels.append(" labels: [");
+        String last = labelsList.get(labelsList.size() - 1);
+        for (String label : labelsList) {
+            String element;
+            if(last.compareTo(label) == 0)
+                element = "'"+ label +"'],";
+            else
+                element = "'"+ label +"', ";
+
+            labels.append(element);
+        }
+        return labels.toString();
+    }
+
+    public String setDataset(ArrayList<Integer> data, String lbl, String border_color, String background_color){
+        StringBuilder dataSet = new StringBuilder();
+        dataSet.append("{\n");
+        String label = "\tlabel: '"+ lbl +"',\n";
+        String bgrColor = "\tbackgroundColor: '"+ background_color + "',\n";
+        String borderColor = "\tborderColor: '"+ border_color + "',\n";
+
+        dataSet.append(label).append(bgrColor).append(borderColor).append("\tdata: [");
+        int last = data.get(data.size() - 1);
+
+        for (int value : data) {
+            String element;
+            if(last == value)
+                element = value +"]";
+            else
+                element = value +", ";
+
+            dataSet.append(element);
+        }
+
+        dataSet.append("\n},\n");
+        return dataSet.toString();
     }
 }

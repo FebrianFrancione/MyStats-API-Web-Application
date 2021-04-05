@@ -24,16 +24,24 @@
         </div>
 
         <div class="create">
-            <form class="create-form" action="#" method="post" th:action="@{/chart/create}">
-                <input placeholder="title" type="text" name="title" />
-                <input placeholder="width" type="text" name="width" />
-                <input placeholder="height" type="text" name="height" />
-                <select id="chartType" class="form-control" name="chartType">
+            <form class="create-form" action="#" method="post" th:action="@{/chart/create}" th:object="${chart}">
+                <input placeholder="title" type="text" th:field="*{title}" /><br>
+                <input placeholder="width" type="text" th:field="*{width}" /><br>
+                <input placeholder="height" type="text" th:field="*{height}" /><br>
+                <select id="chartType" class="form-control" th:field="*{type}">
                     <option value="" disabled selected>--Select--</option>
                     <option value="bar">bar</option>
                     <option value="line">line</option>
                     <option value="pie">pie</option>
-                </select>
+                </select><br>
+                <input placeholder="label1" type="text" th:field="*{label1}" /><br>
+                <input placeholder="label2" type="text" th:field="*{label2}" /><br>
+                <input placeholder="label3" type="text" th:field="*{label3}" /><br>
+                <input placeholder="label4" type="text" th:field="*{label4}" /><br>
+                <input placeholder="value1" type="text" th:field="*{value1}" /><br>
+                <input placeholder="value2" type="text" th:field="*{value2}" /><br>
+                <input placeholder="value3" type="text" th:field="*{value3}" /><br>
+                <input placeholder="value4" type="text" th:field="*{value4}" /><br>
                 <input type="submit" class="create-btn" value="CREATE" />
             </form>
         </div>

@@ -1,5 +1,6 @@
 package com.quickChart.REST;
 
+import com.quickChart.entity.Chart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.quickChart.service.ChartService;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -40,14 +42,16 @@ public class ChartController implements WebMvcConfigurer {
 
     @GetMapping("/Post")
     public String showPost(Model model){
+        model.addAttribute("chart", new Chart());
         return "CreateChart";
     }
 
 
     @PostMapping( "/create")
-    public String createNewAlbum(Model model, @RequestParam String title, @RequestParam int width, @RequestParam int height, @RequestParam String chartType) throws IOException {
-
-        String chartUrl = chartService.createChart(title, width, height, chartType);
+    public String createNewAlbum(Model model, @ModelAttribute("chart") Chart chart) throws IOException {
+        chart.setLabels();
+        chart.setDataSet();
+        String chartUrl = chartService.createChart(chart);
         model.addAttribute("posted", true);
         model.addAttribute("chartUrl", chartUrl);
         return "CreateChart";
