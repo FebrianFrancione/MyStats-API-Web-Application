@@ -1,0 +1,17 @@
+#  Value = username:password
+#    Encoded Value =  base64(Value)
+#    Authorization Value = Basic <Encoded Value>
+#///Example: Authorization: Basic VGVzdFVzZXI6dGVzdDEyMw==
+#//Decode it'll give back the original username:password TestUser:test123
+
+#server:
+#  port: 8080
+#
+#
+#spring:
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          issuer-uri: http://localhost:8083/auth/realms/baeldung
+#          jwk-set-uri: http://localhost:8083/auth/realms/baeldung/protocol/openid-connect/certs

@@ -12,6 +12,7 @@
     <div class="container">
         <div class="welcome-banner">
             <h1>Welcome to Chart Repository Service</h1>
+
         </div>
     </div>
 </header>
@@ -22,14 +23,20 @@
         <div class="input-label">
             <h2>Charts</h2>
         </div>
-
         <a th:href="@{/chart/Get}"  style="--i: 0.05s;">Get a chart</a>
         <a th:href="@{/chart/Post}"  style="--i: 0.05s;">Post a chart</a>
-
         <hr>
-
     </div>
 </section>
 
+<!--<th:a href="@{/login}">Login to Journal</th:a>-->
+<!--<form th:action="@{/login}">Login to Journal</a>}" method="POST">-->
+<!--    <input type="submit" value="Logout"/>-->
+<!--</form>-->
+
+
+<form th:action="@{/chart/login}" method="POST"> Login to Journal
+    <input type="submit" value="Login"/>
+</form>
 </body>
 </html>

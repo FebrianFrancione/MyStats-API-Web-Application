@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -26,9 +27,40 @@ public class ChartController implements WebMvcConfigurer {
     }
 
     @GetMapping( "/")
-    public String showHomePage() {
+    public String showHomePage(Model model) {
         return "Home";
     }
+
+    @GetMapping(value = "/login", produces = MediaType.TEXT_HTML_VALUE)
+    public String login(){
+        return "login";
+    }
+
+//    @GetMapping( "/login")
+//    public String loginPage(){
+////        Model model, @RequestParam(value = "error", required = false) String error, @RequestParam(value = "logout",	required = false) String logout
+////        if (error != null) {
+////            model.addAttribute("error", "Invalid Credentials provided.");
+////        }
+////
+////        if (logout != null) {
+////            model.addAttribute("message", "Logged out from JournalDEV successfully.");
+////        }
+//        return "Login";
+//    }
+//
+//    @GetMapping( "/login")
+//    public String login(){
+////        Model model, @RequestParam(value = "error", required = false) String error, @RequestParam(value = "logout",	required = false) String logout
+////        if (error != null) {
+////            model.addAttribute("error", "Invalid Credentials provided.");
+////        }
+////
+////        if (logout != null) {
+////            model.addAttribute("message", "Logged out from JournalDEV successfully.");
+////        }
+//        return "Login";
+//    }
 
     @GetMapping("/Get")
     public String getChart(Model model) {
