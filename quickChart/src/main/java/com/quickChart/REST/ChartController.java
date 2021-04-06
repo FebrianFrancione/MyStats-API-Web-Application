@@ -32,6 +32,11 @@ public class ChartController implements WebMvcConfigurer {
         return "Home";
     }
 
+    @GetMapping( "/Signup")
+    public String showSignupPage() {
+        return "Signup";
+    }
+
     @GetMapping("/Get")
     public String getChart(Model model) {
         String chartUrl = chartService.getChart();
