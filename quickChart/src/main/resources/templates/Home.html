@@ -12,10 +12,15 @@
     <div class="container">
         <div class="welcome-banner">
             <h1>Welcome to Chart Repository Service</h1>
+            <h3 th:inline="text">Welcome [[${#httpServletRequest.remoteUser}]]</h3>
         </div>
     </div>
 </header>
 
+
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Logout" />
+</form>
 
 <section class="my-5">
     <div class="container">
