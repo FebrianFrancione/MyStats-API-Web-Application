@@ -1,28 +1,37 @@
-<!--<!DOCTYPE HTML>-->
-<!--<html xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <title>Displaying Chart</title>-->
-<!--    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />-->
-<!--    <link rel="stylesheet" type="text/css" media="all"-->
-<!--          href="../../css/Style.css" th:href="@{/css/Style.css}" />-->
-<!--</head>-->
-<!--<body>-->
-<!--<h3>Welcome to JournalDEV Tutorials</h3>-->
-<!--<ul>-->
-<!--    <li>Java 8 tutorial</li>-->
-<!--    <li>Spring tutorial</li>-->
-<!--    <li>Gradle tutorial</li>-->
-<!--    <li>BigData tutorial</li>-->
-<!--</ul>-->
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Displaying Chart</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" media="all"
+          href="../../css/Style.css" th:href="@{/css/Style.css}" />
+</head>
+<body>
 
-<!--<th:url value="/logout" var="logoutUrl" />-->
-<!--<form id="logout" action="${logoutUrl}" method="post" >-->
-<!--    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />-->
-<!--</form>-->
-<!--<th:if test="${pageContext.request.userPrincipal.name != null}">-->
-<!--    <a href="javascript:document.getElementById('logout').submit()">Logout</a>-->
-<!--</th:if>-->
-<!--</body>-->
-<!--</html>-->
+<h3>Logout Screen</h3>
+
+<!--    <th:if test="${not empty error}"><div>${error}</div></th:if>-->
+<!--    <th:if test="${not empty message}"><div>${message}</div></th:if>-->
+
+<form name='f' th:action="@{/chart/login}" method='POST'>
+    <fieldset>
+        <legend>Please Login</legend>
+        <div th:if="${param.error}" class="alert alert-error">
+            Invalid Username and Password.
+        </div>
+        <div th:if="${param.logout}" class="alert alert-success">
+            You have been logged out.
+        </div>
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username"/>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password"/>
+        <div class="form-actions">
+            <button type="submit" class="btn">Log in</button>
+        </div>
+    </fieldset>
+</form>
+</body>
+</html>
 
 
