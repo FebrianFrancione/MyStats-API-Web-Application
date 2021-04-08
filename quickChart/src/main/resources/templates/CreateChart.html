@@ -33,14 +33,14 @@
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">Width</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
-                        <input placeholder="width" class="form-control" type="text" th:field="*{width}" required/>
+                        <input type="number" min="50" class="form-control" th:field="*{width}" required/>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">Height</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
-                        <input placeholder="height" class="form-control" type="text" th:field="*{height}" required/>
+                        <input type="number" min="50" class="form-control" th:field="*{height}" required/>
                     </div>
                 </div>
 
@@ -51,7 +51,7 @@
                             <option value="" disabled selected>--Select--</option>
                             <option value="bar">bar</option>
                             <option value="line">line</option>
-                            <option value="pie">pie</option>
+                            <!--<option value="pie">pie</option>-->
                         </select><br>
                     </div>
                 </div>
@@ -89,13 +89,6 @@
                 </div>
             </form>
 
-            <div class="result" th:if = "${posted}">
-                <p class="message">Created new chart!</p>
-                <p class="message"> chart URL :  <span th:text="${chartUrl}"></span></p>
-                <div class="message">
-                    <img class='img-thumbnail' style="object-fit: fill;" th:src="${chartUrl}" alt="Chart"/>
-                </div>
-            </div>
         </div>
     </div>
 </div>

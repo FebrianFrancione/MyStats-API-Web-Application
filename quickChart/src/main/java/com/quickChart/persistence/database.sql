@@ -65,6 +65,9 @@ CREATE TABLE `datasets` (
                             `border_color` varchar(45) DEFAULT NULL,
                             `background_color` varchar(45) DEFAULT NULL,
                             `border_width` int DEFAULT NULL,
+                            `fill` varchar(45) DEFAULT NULL,
+                            `pointRadius` int DEFAULT NULL,
+                            `showLine` varchar(45) DEFAULT NULL,
                             PRIMARY KEY (`dataset_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

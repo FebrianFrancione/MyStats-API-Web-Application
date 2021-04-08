@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Getting Started: Serving Web Content</title>
+    <title>Line Dataset</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 
@@ -57,7 +57,7 @@
                     </div>
                 </div>
                 <div class="form-group" id="dataset">
-                    <h2>Bar Dataset</h2>
+                    <h2>Line Dataset</h2>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">Dataset Label</label>
@@ -68,13 +68,13 @@
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">Border Color</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
-                        <input class="form-control" type="color" th:field="*{dataSet.border_color}" />
+                        <input placeholder="color" class="form-control" type="color" th:field="*{dataSet.border_color}" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">Background Color</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
-                        <input class="form-control" type="color" th:field="*{dataSet.background_color}" />
+                        <input placeholder="color" class="form-control" type="color" th:field="*{dataSet.background_color}" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -83,7 +83,25 @@
                         <input class="form-control" type="number" min="1" th:field="*{dataSet.borderWidth}" />
                     </div>
                 </div>
-               <div class="dataset-group form-group" th:each="label, stat : *{labels}">
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Fill</label>
+                    <div class="col-md-8 col-sm-8 col-xs-8">
+                        <input placeholder="fill" class="form-control" type="text" th:field="*{dataSet.fill}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Point Radius</label>
+                    <div class="col-md-8 col-sm-8 col-xs-8">
+                        <input class="form-control" type="number" min="1" th:field="*{dataSet.pointRadius}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Show Line</label>
+                    <div class="col-md-8 col-sm-8 col-xs-8">
+                        <input placeholder="showLine" class="form-control" type="text" th:field="*{dataSet.showLine}" />
+                    </div>
+                </div>
+                <div class="dataset-group form-group" th:each="label, stat : *{labels}">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">Value</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
                         <input placeholder="data" class="form-control" type="text" th:field="*{dataSet.data}" required />

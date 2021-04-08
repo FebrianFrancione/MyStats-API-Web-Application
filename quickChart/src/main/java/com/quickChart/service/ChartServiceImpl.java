@@ -15,10 +15,9 @@ public class ChartServiceImpl implements ChartService{
     StatsDAO statsDao = new StatsDAO();
 
     @Override
-    public String getChart(){
-
-        //For now return a static url
-        return "https://quickchart.io/chart/render/zf-47776625-e5bd-44c0-a2af-9a9ab91efdc9";
+    public String getChart(int chartId){
+        String chartUrl = statsDao.getChart(chartId);
+        return chartUrl;
     }
 
     @Override
@@ -26,7 +25,7 @@ public class ChartServiceImpl implements ChartService{
 
         String labels = setLabels(chart.getLabels());
         DataSet dataSet = chart.getDataSet();
-        String dataSets = setDataset(dataSet);
+        String dataSets = setDataset(chart.getType(), dataSet);
 
         QuickChart Quickchart = new QuickChart();
         Quickchart.setWidth(chart.getWidth());
@@ -54,7 +53,13 @@ public class ChartServiceImpl implements ChartService{
         if(chartId >= 1) {
             System.out.println("Chart has been created with ID " + chartId);
             statsDao.addLabels(chart.getLabels(), chartId);
-            int dataset_id = statsDao.addDataset(chartId, dataSet, chart.getType());
+
+            int dataset_id = 0;
+            if(chart.getType().compareTo("bar") == 0)
+                dataset_id = statsDao.addBarDataset(chartId, dataSet, chart.getType());
+            else if(chart.getType().compareTo("line") == 0)
+                dataset_id = statsDao.addLineDataset(chartId, dataSet, chart.getType());
+
             if(dataset_id >= 1){
                 System.out.println("Dataset has been created with ID " + dataset_id);
                 statsDao.addData(dataSet.getData(), dataset_id);
@@ -81,16 +86,46 @@ public class ChartServiceImpl implements ChartService{
         return labels.toString();
     }
 
-    public String setDataset(DataSet dataSet){
+    public String setBarDataset(DataSet dataSet){
         StringBuilder dataSetJson = new StringBuilder();
         dataSetJson.append("{\n");
         String label = "\tlabel: '"+ dataSet.getLabel() +"',\n";
         String bgrColor = "\tbackgroundColor: '"+ dataSet.getBackground_color() + "',\n";
         String borderColor = "\tborderColor: '"+ dataSet.getBorder_color() + "',\n";
-        String borderWidth = "\tborderWidth: '"+ dataSet.getBorderWidth() + "',\n";
+        String borderWidth = "\tborderWidth: "+ dataSet.getBorderWidth() + ",\n";
         ArrayList<Integer> data = dataSet.getData();
 
         dataSetJson.append(label).append(bgrColor).append(borderColor).append(borderWidth).append("\tdata: [");
+        int last = data.get(data.size() - 1);
+
+        for (int value : data) {
+            String element;
+            if(last == value)
+                element = value +"]";
+            else
+                element = value +", ";
+
+            dataSetJson.append(element);
+        }
+
+        dataSetJson.append("\n},\n");
+        return dataSetJson.toString();
+    }
+
+    public String setLineDataset(DataSet dataSet){
+        StringBuilder dataSetJson = new StringBuilder();
+        dataSetJson.append("{\n");
+        String label = "\tlabel: '"+ dataSet.getLabel() +"',\n";
+        String bgrColor = "\tbackgroundColor: '"+ dataSet.getBackground_color() + "',\n";
+        String borderColor = "\tborderColor: '"+ dataSet.getBorder_color() + "',\n";
+        String borderWidth = "\tborderWidth: "+ dataSet.getBorderWidth() + ",\n";
+        String fill = "\tfill: "+ dataSet.isFill() + ",\n";
+        String pointRadius = "\tpointRadius: "+ dataSet.getPointRadius() + ",\n";
+        String showLine = "\tshowLine: "+ dataSet.isShowLine() + ",\n";
+        ArrayList<Integer> data = dataSet.getData();
+
+        dataSetJson.append(label).append(bgrColor).append(borderColor).append(borderWidth).append(fill)
+                .append(pointRadius).append(showLine).append("\tdata: [");
         int last = data.get(data.size() - 1);
 
         for (int value : data) {
@@ -122,5 +157,19 @@ public class ChartServiceImpl implements ChartService{
                 break;
         }
         return template;
+    }
+
+    public String setDataset(String chartType, DataSet dataSet){
+        String dataSetJson = "";
+
+        switch (chartType) {
+            case "bar":
+                dataSetJson = setBarDataset(dataSet);
+                break;
+            case "line":
+                dataSetJson = setLineDataset(dataSet);
+                break;
+        }
+        return dataSetJson;
     }
 }

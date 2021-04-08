@@ -7,8 +7,26 @@ public class DataSet {
     private String label;
     private String border_color = "#F28E2B";
     private String background_color = "#F28E2B33";
-    private boolean fill;
+    private boolean fill = true;
     private int borderWidth = 2;
+    private int pointRadius = 10;
+    private boolean showLine = true;
+
+    public boolean isShowLine() {
+        return showLine;
+    }
+
+    public void setShowLine(boolean showLine) {
+        this.showLine = showLine;
+    }
+
+    public int getPointRadius() {
+        return pointRadius;
+    }
+
+    public void setPointRadius(int pointRadius) {
+        this.pointRadius = pointRadius;
+    }
 
     public DataSet() {
     }
