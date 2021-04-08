@@ -1,5 +1,7 @@
 package com.quickChart.persistence;
 
+import com.quickChart.entity.Chart;
+import com.quickChart.entity.DataSet;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -13,18 +15,18 @@ public class StatsDAO {
     private PreparedStatement statement = null;
     private JDBConfig jdbc = new JDBConfig();
 
-    public int addChart(String title, String url, String type, int width, int height) {
+    public int addChart(Chart chart, String url) {
         int newID = 0;
         java.util.Date utilDate = new java.util.Date();
         Timestamp time_stamp = new Timestamp(utilDate.getTime());
         String sql = "insert into charts (chart_title, chart_url, type, width, height) values (?,?,?,?,?)";
         statement = jdbc.prepareStatementWithKeys(sql);
         try {
-            statement.setString(1, title);
+            statement.setString(1, chart.getTitle());
             statement.setString(2, url);
-            statement.setString(3, type);
-            statement.setInt(4, width);
-            statement.setInt(5, height);
+            statement.setString(3, chart.getType());
+            statement.setInt(4, chart.getWidth());
+            statement.setInt(5, chart.getHeight());
             int insertedRow = statement.executeUpdate();
 
             if (insertedRow == 0) {
@@ -68,16 +70,17 @@ public class StatsDAO {
         return success;
     }
 
-    public int addDataset(int chartId, String label, String chart_type, String border_color, String background_color) {
+    public int addDataset(int chartId, DataSet dataSet, String chart_type) {
         int newID = 0;
-        String sql = "insert into datasets (chart_id, label, chart_type, border_color, background_color) values (?,?,?,?,?)";
+        String sql = "insert into datasets (chart_id, label, chart_type, border_color, background_color, border_width) values (?,?,?,?,?,?)";
         statement = jdbc.prepareStatementWithKeys(sql);
         try {
             statement.setInt(1, chartId);
-            statement.setString(2, label);
+            statement.setString(2, dataSet.getLabel());
             statement.setString(3, chart_type);
-            statement.setString(4, border_color);
-            statement.setString(5, background_color);
+            statement.setString(4, dataSet.getBorder_color());
+            statement.setString(5, dataSet.getBackground_color());
+            statement.setInt(6, dataSet.getBorderWidth());
             int insertedRow = statement.executeUpdate();
 
             if (insertedRow == 0) {

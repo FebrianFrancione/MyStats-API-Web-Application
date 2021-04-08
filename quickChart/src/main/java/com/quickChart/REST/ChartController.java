@@ -1,6 +1,7 @@
 package com.quickChart.REST;
 
 import com.quickChart.entity.Chart;
+import com.quickChart.entity.DataSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -52,12 +53,20 @@ public class ChartController implements WebMvcConfigurer {
     }
 
 
-    @PostMapping( "/create")
-    public String createNewAlbum(Model model, @ModelAttribute("chart") Chart chart) throws IOException {
+    @PostMapping( "/createDataSet")
+    public String createDataSet(Model model, @ModelAttribute("chart") Chart chart) throws IOException {
+        String template = chartService.getDataSetTemplate(chart.getType());
+        model.addAttribute("chart", chart);
+        return template;
+    }
+
+    @PostMapping( "/createChart")
+    public String createChart(Model model, @ModelAttribute("chart") Chart chart) throws IOException {
         String chartUrl = chartService.createChart(chart);
         model.addAttribute("posted", true);
         model.addAttribute("chartUrl", chartUrl);
         return "CreateChart";
-
     }
+
+
 }

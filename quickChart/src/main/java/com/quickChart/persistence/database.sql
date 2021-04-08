@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `stats_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `stats_db`;
 -- MySQL dump 10.13  Distrib 8.0.22, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: stats_db
@@ -66,6 +64,7 @@ CREATE TABLE `datasets` (
                             `chart_type` varchar(45) DEFAULT NULL,
                             `border_color` varchar(45) DEFAULT NULL,
                             `background_color` varchar(45) DEFAULT NULL,
+                            `border_width` int DEFAULT NULL,
                             PRIMARY KEY (`dataset_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -96,7 +95,7 @@ CREATE TABLE `users` (
                          `user_id` int NOT NULL AUTO_INCREMENT,
                          `first_name` varchar(45) DEFAULT NULL,
                          `last_name` varchar(45) DEFAULT NULL,
-                         `password` varchar(45) DEFAULT NULL,
+                         `password` varchar(110) DEFAULT NULL,
                          `token` varchar(45) DEFAULT NULL,
                          PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -111,4 +110,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-03 21:44:01
+-- Dump completed on 2021-04-08 14:39:25
