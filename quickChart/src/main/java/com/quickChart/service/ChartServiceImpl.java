@@ -1,5 +1,6 @@
 package com.quickChart.service;
 import com.quickChart.entity.Chart;
+import com.quickChart.entity.DataSet;
 import com.quickChart.persistence.StatsDAO;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,10 +25,8 @@ public class ChartServiceImpl implements ChartService{
     public String createChart(Chart chart){
 
         String labels = setLabels(chart.getLabels());
-        String label = "Label";
-        String border_color = "#F28E2B";
-        String background_color = "#F28E2B33";
-        String dataSets = setDataset(chart.getDataSet(), label, border_color, background_color);
+        DataSet dataSet = chart.getDataSet();
+        String dataSets = setDataset(dataSet);
 
         QuickChart Quickchart = new QuickChart();
         Quickchart.setWidth(chart.getWidth());
@@ -50,15 +49,15 @@ public class ChartServiceImpl implements ChartService{
         );
 
         String chartUrl = Quickchart.getShortUrl();
-        int chartId = statsDao.addChart(chart.getTitle(), chartUrl, chart.getType(), chart.getWidth(), chart.getHeight());
+        int chartId = statsDao.addChart(chart, chartUrl);
 
         if(chartId >= 1) {
             System.out.println("Chart has been created with ID " + chartId);
             statsDao.addLabels(chart.getLabels(), chartId);
-            int dataset_id = statsDao.addDataset(chartId, label, chart.getType(), border_color, background_color);
+            int dataset_id = statsDao.addDataset(chartId, dataSet, chart.getType());
             if(dataset_id >= 1){
                 System.out.println("Dataset has been created with ID " + dataset_id);
-                statsDao.addData(chart.getDataSet(), dataset_id);
+                statsDao.addData(dataSet.getData(), dataset_id);
             }
 
         }
@@ -82,14 +81,16 @@ public class ChartServiceImpl implements ChartService{
         return labels.toString();
     }
 
-    public String setDataset(ArrayList<Integer> data, String lbl, String border_color, String background_color){
-        StringBuilder dataSet = new StringBuilder();
-        dataSet.append("{\n");
-        String label = "\tlabel: '"+ lbl +"',\n";
-        String bgrColor = "\tbackgroundColor: '"+ background_color + "',\n";
-        String borderColor = "\tborderColor: '"+ border_color + "',\n";
+    public String setDataset(DataSet dataSet){
+        StringBuilder dataSetJson = new StringBuilder();
+        dataSetJson.append("{\n");
+        String label = "\tlabel: '"+ dataSet.getLabel() +"',\n";
+        String bgrColor = "\tbackgroundColor: '"+ dataSet.getBackground_color() + "',\n";
+        String borderColor = "\tborderColor: '"+ dataSet.getBorder_color() + "',\n";
+        String borderWidth = "\tborderWidth: '"+ dataSet.getBorderWidth() + "',\n";
+        ArrayList<Integer> data = dataSet.getData();
 
-        dataSet.append(label).append(bgrColor).append(borderColor).append("\tdata: [");
+        dataSetJson.append(label).append(bgrColor).append(borderColor).append(borderWidth).append("\tdata: [");
         int last = data.get(data.size() - 1);
 
         for (int value : data) {
@@ -99,10 +100,27 @@ public class ChartServiceImpl implements ChartService{
             else
                 element = value +", ";
 
-            dataSet.append(element);
+            dataSetJson.append(element);
         }
 
-        dataSet.append("\n},\n");
-        return dataSet.toString();
+        dataSetJson.append("\n},\n");
+        return dataSetJson.toString();
+    }
+
+    public String getDataSetTemplate(String chartType){
+        String template = "";
+
+        switch (chartType) {
+            case "bar":
+                template = "BarDataset";
+                break;
+            case "line":
+                template = "LineDataset";
+                break;
+            case "pie":
+                template = "PieDataset";
+                break;
+        }
+        return template;
     }
 }

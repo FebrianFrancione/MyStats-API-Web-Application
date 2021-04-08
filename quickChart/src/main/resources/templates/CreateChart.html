@@ -22,30 +22,30 @@
         <div class="chart col-md-offset-3 col-md-6 col-sm-6 col-xs-12">
             <h2 class="text-center">Create a chart</h2><hr>
 
-            <form class="form-horizontal form-postInfo" id="chart-form" role="form" action="#" method="post" th:action="@{/chart/create}" th:object="${chart}">
+            <form class="form-horizontal form-postInfo" id="chart-form" role="form" action="#" method="post" th:action="@{/chart/createDataSet}" th:object="${chart}">
                 <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Chart title :</label>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Chart title</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
                         <input placeholder="title" class="form-control" type="text" th:field="*{title}" />
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Width :</label>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Width</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
-                        <input placeholder="width" class="form-control" type="text" th:field="*{width}" />
+                        <input placeholder="width" class="form-control" type="text" th:field="*{width}" required/>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Height :</label>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Height</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
-                        <input placeholder="height" class="form-control" type="text" th:field="*{height}" />
+                        <input placeholder="height" class="form-control" type="text" th:field="*{height}" required/>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Type :</label>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Type</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
                         <select id="chartType" class="form-control" th:field="*{type}">
                             <option value="" disabled selected>--Select--</option>
@@ -56,10 +56,23 @@
                     </div>
                 </div>
                 <div class="labels-group form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Label :</label>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Label</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
                         <div class="input-group control-group">
-                            <input placeholder="label" class="form-control" type="text" name="labels[]" />
+                            <input placeholder="label" class="form-control" type="text" name="labels[]" required/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-danger remove-labels" type="button">
+                                    <span class="glyphicon glyphicon-minus"></span>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="labels-group form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Label</label>
+                    <div class="col-md-8 col-sm-8 col-xs-8">
+                        <div class="input-group control-group">
+                            <input placeholder="label" class="form-control" type="text" name="labels[]" required/>
                             <span class="input-group-btn">
                                 <button class="btn btn-success add-labels" type="button">
                                     <span class="glyphicon glyphicon-plus"></span>
@@ -68,29 +81,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group" id="dataset">
-                    <h2>Dataset:</h2>
-                </div>
-                <div class="dataset-group form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Value :</label>
-                    <div class="col-md-8 col-sm-8 col-xs-8">
-                        <div class="input-group control-group">
-                            <input placeholder="data" class="form-control" type="text" name="dataSet[]" />
-                            <span class="input-group-btn">
-                                <button class="btn btn-success add-dataset" type="button">
-                                    <span class="glyphicon glyphicon-plus"></span>
-                                </button>
-                            </span>
-                        </div>
-                    </div>
-                </div>
+
                 <div class="form-group" id="submit-btn">
                     <div class="col-md-6 col-sm-6 col-xs-6 col-md-offset-3 col-sm-offset-3 col-xs-offset-3 text-center">
-                        <button type="submit" class="btn btn-lg btn-success btn-block submit">Create</button>
+                        <button type="submit" class="btn btn-lg btn-success btn-block submit">Add Dataset</button>
                     </div>
                 </div>
             </form>
-
 
             <div class="result" th:if = "${posted}">
                 <p class="message">Created new chart!</p>
