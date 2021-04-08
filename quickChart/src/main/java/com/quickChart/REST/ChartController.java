@@ -38,13 +38,14 @@ public class ChartController implements WebMvcConfigurer {
         return "Signup";
     }
 
+    /*
     @GetMapping("/Get")
     public String getChart(Model model) {
-        String chartUrl = chartService.getChart();
+        String chartUrl = chartService.getChart(2);
         model.addAttribute("get", true);
         model.addAttribute("chart", chartUrl);
         return "Chart";
-    }
+    }*/
 
     @GetMapping("/Post")
     public String showPost(Model model){
@@ -64,8 +65,8 @@ public class ChartController implements WebMvcConfigurer {
     public String createChart(Model model, @ModelAttribute("chart") Chart chart) throws IOException {
         String chartUrl = chartService.createChart(chart);
         model.addAttribute("posted", true);
-        model.addAttribute("chartUrl", chartUrl);
-        return "CreateChart";
+        model.addAttribute("chart", chartUrl);
+        return "Chart";
     }
 
 

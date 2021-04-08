@@ -26,6 +26,15 @@
         <div class="result" th:if="${get}">
             <img class='img-thumbnail' style=" object-fit: fill;" th:src="${chart}" alt="Chart"/>
         </div>
+
+        <div class="result" th:if = "${posted}">
+            <p class="message">Created new chart!</p>
+            <p class="message"> chart URL :  <span th:text="${chart}"></span></p>
+            <div class="message">
+                <img th:src="${chart}" alt="Chart"/>
+            </div>
+        </div>
+
     </div>
 </section>
 

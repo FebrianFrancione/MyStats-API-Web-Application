@@ -50,6 +50,28 @@ public class StatsDAO {
         return newID;
     }
 
+    public String getChart(int chartId){
+        String chartUrl = "";
+        String sql = "select * from charts where chart_id=?";
+        statement = jdbc.prepareStatement(sql);
+        ResultSet rs = null;
+
+        try {
+            statement.setInt(1, chartId);
+
+            rs = statement.executeQuery();
+            while(rs.next()){
+                chartUrl = rs.getString("chart_url");
+            }
+
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally {
+            jdbc.close();
+        }
+        return chartUrl;
+    }
+
     public boolean addLabels(ArrayList<String> labels, int chartId) {
         boolean success = false;
         String sql = "insert into labels (title, chart_id) values (?,?)";
@@ -70,7 +92,7 @@ public class StatsDAO {
         return success;
     }
 
-    public int addDataset(int chartId, DataSet dataSet, String chart_type) {
+    public int addBarDataset(int chartId, DataSet dataSet, String chart_type) {
         int newID = 0;
         String sql = "insert into datasets (chart_id, label, chart_type, border_color, background_color, border_width) values (?,?,?,?,?,?)";
         statement = jdbc.prepareStatementWithKeys(sql);
@@ -81,6 +103,42 @@ public class StatsDAO {
             statement.setString(4, dataSet.getBorder_color());
             statement.setString(5, dataSet.getBackground_color());
             statement.setInt(6, dataSet.getBorderWidth());
+            int insertedRow = statement.executeUpdate();
+
+            if (insertedRow == 0) {
+                throw new SQLException("Insert failed");
+            }
+
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    newID = generatedKeys.getInt(1);
+                }
+                else {
+                    throw new SQLException("Creating a dataset failed, no ID obtained.");
+                }
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally {
+            jdbc.close();
+        }
+        return newID;
+    }
+
+    public int addLineDataset(int chartId, DataSet dataSet, String chart_type) {
+        int newID = 0;
+        String sql = "insert into datasets (chart_id, label, chart_type, border_color, background_color, border_width, fill, pointRadius, showLine) values (?,?,?,?,?,?,?,?,?)";
+        statement = jdbc.prepareStatementWithKeys(sql);
+        try {
+            statement.setInt(1, chartId);
+            statement.setString(2, dataSet.getLabel());
+            statement.setString(3, chart_type);
+            statement.setString(4, dataSet.getBorder_color());
+            statement.setString(5, dataSet.getBackground_color());
+            statement.setInt(6, dataSet.getBorderWidth());
+            statement.setString(7, String.valueOf(dataSet.isFill()));
+            statement.setInt(8, dataSet.getPointRadius());
+            statement.setString(9, String.valueOf(dataSet.isShowLine()));
             int insertedRow = statement.executeUpdate();
 
             if (insertedRow == 0) {
