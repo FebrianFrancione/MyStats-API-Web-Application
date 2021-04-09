@@ -103,20 +103,7 @@ public class StatsDAO {
             statement.setString(4, dataSet.getBorder_color());
             statement.setString(5, dataSet.getBackground_color());
             statement.setInt(6, dataSet.getBorderWidth());
-            int insertedRow = statement.executeUpdate();
-
-            if (insertedRow == 0) {
-                throw new SQLException("Insert failed");
-            }
-
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    newID = generatedKeys.getInt(1);
-                }
-                else {
-                    throw new SQLException("Creating a dataset failed, no ID obtained.");
-                }
-            }
+            newID = insertDataset();
         }catch(SQLException e){
             e.printStackTrace();
         }finally {
@@ -139,26 +126,51 @@ public class StatsDAO {
             statement.setString(7, String.valueOf(dataSet.isFill()));
             statement.setInt(8, dataSet.getPointRadius());
             statement.setString(9, String.valueOf(dataSet.isShowLine()));
-            int insertedRow = statement.executeUpdate();
-
-            if (insertedRow == 0) {
-                throw new SQLException("Insert failed");
-            }
-
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    newID = generatedKeys.getInt(1);
-                }
-                else {
-                    throw new SQLException("Creating a dataset failed, no ID obtained.");
-                }
-            }
+            newID = insertDataset();
         }catch(SQLException e){
             e.printStackTrace();
         }finally {
             jdbc.close();
         }
         return newID;
+    }
+
+    public int addPieDataset(int chartId, DataSet dataSet, String chart_type) {
+        int newID = 0;
+        String sql = "insert into datasets (chart_id, label, chart_type, border_width) values (?,?,?,?)";
+        statement = jdbc.prepareStatementWithKeys(sql);
+        try {
+            statement.setInt(1, chartId);
+            statement.setString(2, dataSet.getLabel());
+            statement.setString(3, chart_type);
+            statement.setInt(4, dataSet.getBorderWidth());
+            newID = insertDataset();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally {
+            jdbc.close();
+        }
+        return newID;
+    }
+
+    public boolean addPieChartColors(int datasetId, DataSet dataSet) {
+        boolean success = false;
+        String sql = "insert into background_colors (color, dataset_id) values (?,?)";
+        statement = jdbc.prepareStatement(sql);
+        ArrayList<String> backgroundColors = dataSet.getBackgroundColors();
+        try {
+            for (String color : backgroundColors) {
+                statement.setString(1, color);
+                statement.setInt(2, datasetId);
+                statement.executeUpdate();
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally {
+            jdbc.close();
+            success = true;
+        }
+        return success;
     }
 
     public boolean addData(ArrayList<Integer> data, int datasetId) {
@@ -179,5 +191,27 @@ public class StatsDAO {
             success = true;
         }
         return success;
+    }
+
+    /*
+    ** Helper to execute insert statement for all datasets
+     */
+    public int insertDataset() throws SQLException {
+        int newID = 0;
+        int insertedRow = statement.executeUpdate();
+
+        if (insertedRow == 0) {
+            throw new SQLException("Insert failed");
+        }
+
+        try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                newID = generatedKeys.getInt(1);
+            }
+            else {
+                throw new SQLException("Creating a dataset failed, no ID obtained.");
+            }
+        }
+        return newID;
     }
 }

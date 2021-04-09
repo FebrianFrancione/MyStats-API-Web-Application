@@ -57,7 +57,7 @@
                     </div>
                 </div>
                 <div class="form-group" id="dataset">
-                    <h2>Line Dataset</h2>
+                    <h2><span th:text="*{type}"></span> dataset</h2>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">Dataset Label</label>
@@ -108,7 +108,7 @@
                     </div>
                 </div>
                 <div class="dataset-group form-group" th:each="label, stat : *{labels}">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Value</label>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3"><span th:text="${label}"></span></label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
                         <input placeholder="data" class="form-control" type="text" th:field="*{dataSet.data}" required />
                     </div>

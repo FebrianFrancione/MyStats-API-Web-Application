@@ -9,8 +9,17 @@ public class DataSet {
     private String background_color = "#FFEAD6";
     private boolean fill = true;
     private int borderWidth = 2;
-    private int pointRadius = 10;
+    private int pointRadius = 3;
     private boolean showLine = true;
+    private ArrayList<String> backgroundColors = new ArrayList<>();
+
+    public ArrayList<String> getBackgroundColors() {
+        return backgroundColors;
+    }
+
+    public void setBackgroundColors(ArrayList<String> backgroundColors) {
+        this.backgroundColors = backgroundColors;
+    }
 
     public boolean isShowLine() {
         return showLine;

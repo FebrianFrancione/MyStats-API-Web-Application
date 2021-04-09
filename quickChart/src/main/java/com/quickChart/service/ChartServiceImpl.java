@@ -6,8 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import io.quickchart.QuickChart;
-
+import java.util.Random;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @Service
 public class ChartServiceImpl implements ChartService{
@@ -59,6 +60,11 @@ public class ChartServiceImpl implements ChartService{
                 dataset_id = statsDao.addBarDataset(chartId, dataSet, chart.getType());
             else if(chart.getType().compareTo("line") == 0)
                 dataset_id = statsDao.addLineDataset(chartId, dataSet, chart.getType());
+            else if(chart.getType().compareTo("pie") == 0 || chart.getType().compareTo("doughnut")== 0){
+                dataset_id = statsDao.addPieDataset(chartId, dataSet, chart.getType());
+                if(dataset_id >= 1)
+                    statsDao.addPieChartColors(dataset_id, dataSet);
+            }
 
             if(dataset_id >= 1){
                 System.out.println("Dataset has been created with ID " + dataset_id);
@@ -67,6 +73,7 @@ public class ChartServiceImpl implements ChartService{
 
         }
 
+        chart.setChartUrl(chartUrl);
         return chartUrl;
     }
 
@@ -94,20 +101,7 @@ public class ChartServiceImpl implements ChartService{
         String borderColor = "\tborderColor: '"+ dataSet.getBorder_color() + "',\n";
         String borderWidth = "\tborderWidth: "+ dataSet.getBorderWidth() + ",\n";
         ArrayList<Integer> data = dataSet.getData();
-
-        dataSetJson.append(label).append(bgrColor).append(borderColor).append(borderWidth).append("\tdata: [");
-        int last = data.get(data.size() - 1);
-
-        for (int value : data) {
-            String element;
-            if(last == value)
-                element = value +"]";
-            else
-                element = value +", ";
-
-            dataSetJson.append(element);
-        }
-
+        dataSetJson.append(label).append(bgrColor).append(borderColor).append(borderWidth).append("\tdata: " + data);
         dataSetJson.append("\n},\n");
         return dataSetJson.toString();
     }
@@ -123,25 +117,27 @@ public class ChartServiceImpl implements ChartService{
         String pointRadius = "\tpointRadius: "+ dataSet.getPointRadius() + ",\n";
         String showLine = "\tshowLine: "+ dataSet.isShowLine() + ",\n";
         ArrayList<Integer> data = dataSet.getData();
-
         dataSetJson.append(label).append(bgrColor).append(borderColor).append(borderWidth).append(fill)
-                .append(pointRadius).append(showLine).append("\tdata: [");
-        int last = data.get(data.size() - 1);
-
-        for (int value : data) {
-            String element;
-            if(last == value)
-                element = value +"]";
-            else
-                element = value +", ";
-
-            dataSetJson.append(element);
-        }
+                .append(pointRadius).append(showLine).append("\tdata: " + data);
 
         dataSetJson.append("\n},\n");
         return dataSetJson.toString();
     }
 
+    public String setPieDataset(DataSet dataSet){
+        StringBuilder dataSetJson = new StringBuilder();
+        dataSetJson.append("{\n");
+        String label = "\tlabel: '"+ dataSet.getLabel() +"',\n";
+        String borderWidth = "\tborderWidth: "+ dataSet.getBorderWidth() + ",\n";
+        String colors = dataSet.getBackgroundColors().stream().collect(Collectors.joining("','", "'", "'"));
+        String backgroundColor = "\tbackgroundColor: ["+ colors + "],\n";
+        ArrayList<Integer> data = dataSet.getData();
+        dataSetJson.append(label).append(borderWidth).append(backgroundColor).append("\tdata: "+ data);
+        dataSetJson.append("\n},\n");
+        return dataSetJson.toString();
+    }
+
+    @Override
     public String getDataSetTemplate(String chartType){
         String template = "";
 
@@ -153,6 +149,7 @@ public class ChartServiceImpl implements ChartService{
                 template = "LineDataset";
                 break;
             case "pie":
+            case "doughnut":
                 template = "PieDataset";
                 break;
         }
@@ -169,7 +166,24 @@ public class ChartServiceImpl implements ChartService{
             case "line":
                 dataSetJson = setLineDataset(dataSet);
                 break;
+            case "pie":
+            case "doughnut":
+                dataSetJson = setPieDataset(dataSet);
+                break;
         }
         return dataSetJson;
+    }
+
+    @Override
+    public ArrayList<String> generateColors(int length){
+        ArrayList<String> backgroundColors = new ArrayList<>();
+
+        for(int i =0; i<length; i++){
+            Random obj = new Random();
+            int rand_num = obj.nextInt(0xffffff + 1);
+            backgroundColors.add(String.format("#%06x", rand_num));
+        }
+
+        return backgroundColors;
     }
 }
