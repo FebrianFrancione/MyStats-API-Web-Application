@@ -86,7 +86,10 @@
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">Fill</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
-                        <input placeholder="fill" class="form-control" type="text" th:field="*{dataSet.fill}" />
+                        <select class="form-control" size="2" th:field="*{dataSet.fill}">
+                            <option value="true" selected>true</option>
+                            <option value="false">false</option>
+                        </select><br>
                     </div>
                 </div>
                 <div class="form-group">
@@ -98,7 +101,10 @@
                 <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-3">Show Line</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
-                        <input placeholder="showLine" class="form-control" type="text" th:field="*{dataSet.showLine}" />
+                        <select class="form-control" size="2" th:field="*{dataSet.showLine}">
+                            <option value="true" selected>true</option>
+                            <option value="false">false</option>
+                        </select><br>
                     </div>
                 </div>
                 <div class="dataset-group form-group" th:each="label, stat : *{labels}">
