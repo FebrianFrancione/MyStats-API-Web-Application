@@ -6,7 +6,7 @@ public class DataSet {
     private ArrayList<Integer> data = new ArrayList<>();
     private String label;
     private String border_color = "#F28E2B";
-    private String background_color = "#F28E2B33";
+    private String background_color = "#FFEAD6";
     private boolean fill = true;
     private int borderWidth = 2;
     private int pointRadius = 10;
