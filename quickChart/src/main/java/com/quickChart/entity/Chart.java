@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Chart {
-    private String title;
-    private int width;
-    private int height;
+    private String title = "test chart";
+    private int width = 600;
+    private int height = 400;
     private String type;
     private ArrayList<String> labels = new ArrayList<>();
     private DataSet dataSet;
+    private String chartUrl;
 
     public Chart() {
     }
@@ -20,6 +21,14 @@ public class Chart {
         this.width = width;
         this.height = height;
         this.type = type;
+    }
+
+    public String getChartUrl() {
+        return chartUrl;
+    }
+
+    public void setChartUrl(String chartUrl) {
+        this.chartUrl = chartUrl;
     }
 
     public ArrayList<String> getLabels() {

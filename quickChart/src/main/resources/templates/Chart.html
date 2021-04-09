@@ -29,9 +29,9 @@
 
         <div class="result" th:if = "${posted}">
             <p class="message">Created new chart!</p>
-            <p class="message"> chart URL :  <span th:text="${chart}"></span></p>
-            <div class="message">
-                <img th:src="${chart}" alt="Chart"/>
+            <p class="message"> chart URL :  <span th:text="${chart.getChartUrl()}"></span></p>
+            <div>
+                <img th:src="${chart.getChartUrl()}" alt="Chart"/>
             </div>
         </div>
 

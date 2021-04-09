@@ -8,4 +8,5 @@ public interface ChartService {
     public String getChart(int chartId);
     public String createChart(Chart chart);
     public String getDataSetTemplate(String chartType);
+    public ArrayList<String> generateColors(int length);
 }

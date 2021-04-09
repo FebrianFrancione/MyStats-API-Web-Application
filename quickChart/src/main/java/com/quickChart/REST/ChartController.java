@@ -57,6 +57,13 @@ public class ChartController implements WebMvcConfigurer {
     @PostMapping( "/createDataSet")
     public String createDataSet(Model model, @ModelAttribute("chart") Chart chart) throws IOException {
         String template = chartService.getDataSetTemplate(chart.getType());
+
+        if(chart.getType().compareTo("pie") == 0 || chart.getType().compareTo("doughnut")== 0){
+            DataSet dataSet = new DataSet();
+            dataSet.setBackgroundColors(chartService.generateColors(chart.getLabels().size()));
+            chart.setDataSet(dataSet);
+        }
+
         model.addAttribute("chart", chart);
         return template;
     }
@@ -65,7 +72,7 @@ public class ChartController implements WebMvcConfigurer {
     public String createChart(Model model, @ModelAttribute("chart") Chart chart) throws IOException {
         String chartUrl = chartService.createChart(chart);
         model.addAttribute("posted", true);
-        model.addAttribute("chart", chartUrl);
+        model.addAttribute("chart", chart);
         return "Chart";
     }
 
