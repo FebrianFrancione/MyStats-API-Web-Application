@@ -25,6 +25,38 @@
                     <h3 th:inline="text">Welcome [[${#httpServletRequest.remoteUser}]]</h3>
                 </div>
             </div>
+            <div class="row" th:if="${#lists.isEmpty(chartList)}">
+                <div class="col">
+                    <div class="alert alert-info alert-dismissible fade show">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <p>No charts found</p>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive" th:if="${not #lists.isEmpty(chartList)}">
+                <table class="table table-borderless table-striped table-hover" >
+                    <thead class="thead-dark">
+                    <tr>
+                        <th >Id</th>
+                        <th >Title</th>
+                        <th >URL</th>
+                        <th >Type</th>
+                        <th >Width</th>
+                        <th >Height</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="chart : ${chartList}">
+                        <td th:text="${chart.getChartId()}"/>
+                        <td th:text="${chart.getTitle()}"/>
+                        <td th:text="${chart.getChartUrl()}"/>
+                        <td th:text="${chart.getType()}"/>
+                        <td th:text="${chart.getWidth()}"/>
+                        <td th:text="${chart.getHeight()}"/>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

@@ -29,7 +29,9 @@ public class ChartController implements WebMvcConfigurer {
     }
 
     @GetMapping( "/")
-    public String showHomePage() {
+    public String showHomePage(Model model) {
+        List<Chart> charts = chartService.getCharts(1);
+        model.addAttribute(charts);
         return "Home";
     }
 

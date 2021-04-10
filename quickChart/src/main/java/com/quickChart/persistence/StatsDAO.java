@@ -50,6 +50,35 @@ public class StatsDAO {
         return newID;
     }
 
+    public List<Chart> getAllCharts(int userId){
+        List<Chart> charts = new ArrayList<>();
+        int chartId, width, height;
+        String title, type, chartUrl;
+        String sql = "select * from charts where user_id=?";
+        statement = jdbc.prepareStatement(sql);
+        ResultSet rs = null;
+
+        try {
+            statement.setInt(1, userId);
+            rs = statement.executeQuery();
+            while(rs.next()){
+                chartId = rs.getInt("chart_id");
+                title = rs.getString("chart_title");
+                chartUrl = rs.getString("chart_url");
+                type = rs.getString("type");
+                width = rs.getInt("width");
+                height = rs.getInt("height");
+                charts.add(new Chart(chartId, title, chartUrl, width, height, type));
+            }
+
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally {
+            jdbc.close();
+        }
+        return charts;
+    }
+
     public String getChart(int chartId){
         String chartUrl = "";
         String sql = "select * from charts where chart_id=?";

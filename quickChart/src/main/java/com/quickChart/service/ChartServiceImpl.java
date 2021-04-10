@@ -6,6 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import io.quickchart.QuickChart;
+
+import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -19,6 +21,12 @@ public class ChartServiceImpl implements ChartService{
     public String getChart(int chartId){
         String chartUrl = statsDao.getChart(chartId);
         return chartUrl;
+    }
+
+    @Override
+    public List<Chart> getCharts(int userId){
+        List<Chart> charts = statsDao.getAllCharts(userId);
+        return charts;
     }
 
     @Override
