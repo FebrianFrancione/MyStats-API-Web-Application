@@ -12,7 +12,7 @@ $(function()
         chartForm.find('.labels-group:not(:last) .add-labels')
             .removeClass('add-labels').addClass('remove-labels')
             .removeClass('btn-success').addClass('btn-danger')
-            .html('<span class="glyphicon glyphicon-minus"></span>');
+            .html('<i class="fas fa-minus"></i>');
     }).on('click', '.remove-labels', function(e)
     {
         $(this).parents('.labels-group:first').remove();

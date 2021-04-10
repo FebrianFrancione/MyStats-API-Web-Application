@@ -3,40 +3,36 @@
 <head>
     <title>Displaying Chart</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" media="all"
-          href="../../css/Style.css" th:href="@{/css/Style.css}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
-<body>
-<header>
-    <div class="container">
-        <div class="welcome-banner">
-            <h1>Welcome to Chart Repository Service</h1>
-        </div>
-    </div>
-</header>
-
-<a th:href="@{/chart/}"  style="--i: 0.05s;">Home</a>
-
-<section class="my-5">
-    <div class="container">
-        <div class="input-label">
-            <h2>Charts</h2>
-        </div>
-
-        <div class="result" th:if="${get}">
-            <img class='img-thumbnail' style=" object-fit: fill;" th:src="${chart}" alt="Chart"/>
-        </div>
-
-        <div class="result" th:if = "${posted}">
-            <p class="message">Created new chart!</p>
-            <p class="message"> chart URL :  <span th:text="${chart.getChartUrl()}"></span></p>
-            <div>
-                <img th:src="${chart.getChartUrl()}" alt="Chart"/>
+<body class="bg-light text-center">
+<div th:insert="nav-bar :: nav"></div>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="chart">
+            <div class="row">
+                <div class="col">
+                    <h2 class="text-center">Chart</h2>
+                </div>
+            </div>
+            <div class="row" th:if = "${posted}">
+                <div class="col">
+                    <div class="alert alert-info alert-dismissible fade show">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <p><strong>Success!</strong> New chart created</p>
+                    </div>
+                    <p class="message"> chart URL :  <span th:text="${chart.getChartUrl()}"></span></p>
+                    <div>
+                        <img th:src="${chart.getChartUrl()}" alt="Chart"/>
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
-</section>
-
+</div>
 </body>
 </html>
