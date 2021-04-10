@@ -3,85 +3,81 @@
 <head>
     <title>Getting Started: Serving Web Content</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" media="all"
-          href="../../css/Style.css" th:href="@{/css/post_chart.css}" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
 <body class="bg-light text-center">
-
-<a th:href="@{/chart/}"  style="--i: 0.05s;">Home</a>
-
+<div th:insert="nav-bar :: nav"></div>
 <div class="container-fluid">
-    <div class="row">
-        <div class="chart col-md-offset-3 col-md-6 col-sm-6 col-xs-12">
+    <div class="row justify-content-center">
+        <div class="chart col-md-offset-3 col-md-4 col-sm-6 col-xs-12">
             <h2 class="text-center">Chart</h2><hr>
 
-            <form class="form-horizontal form-postInfo" id="chart-form" role="form" action="#" method="post" th:action="@{/chart/createChart}" th:object="${chart}">
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Chart title</label>
+            <form class="form-postInfo" id="chart-form" role="form" action="#" method="post" th:action="@{/chart/createChart}" th:object="${chart}">
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Chart title</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
                         <input placeholder="title" class="form-control" type="text" th:value="*{title}" th:field="*{title}" readonly />
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Width</label>
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Width</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
                         <input placeholder="width" class="form-control" type="text" th:value="*{width}" th:field="*{width}" readonly  />
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Height</label>
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Height</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
                         <input placeholder="height" class="form-control" type="text" th:value="*{height}" th:field="*{height}" readonly />
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Type</label>
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Type</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
                         <input placeholder="type" class="form-control" type="text" th:value="*{type}" th:field="*{type}" readonly />
                     </div>
                 </div>
-                <div class="labels-group form-group" th:each="label, stat : *{labels}">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Label</label>
+                <div class="labels-group form-group row" th:each="label, stat : *{labels}">
+                    <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Label</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
                         <input placeholder="label" class="form-control" type="text" th:value="${label}" th:field="*{labels[__${stat.index}__]}" readonly/>
                     </div>
                 </div>
-                <div class="form-group" id="dataset">
+                <div class="form-group row offset-md-4" id="dataset">
                     <h2><span th:text="*{type}"></span> dataset</h2>
                 </div>
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Dataset Label</label>
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Dataset Label</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
                         <input placeholder="label" class="form-control" type="text" th:field="*{dataSet.label}" required/>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Border Width</label>
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Border Width</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
                         <input class="form-control" type="number" min="1" th:field="*{dataSet.borderWidth}" />
                     </div>
                 </div>
-                <div class="dataset-group form-group" th:each="label, stat : *{labels}">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3"><span th:text="${label}"></span></label>
+                <div class="dataset-group form-group row" th:each="label, stat : *{labels}">
+                    <label class="col-form-label col-md-3 col-sm-3 col-xs-3"><span th:text="${label}"></span></label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
                         <input placeholder="data" class="form-control" type="text" th:field="*{dataSet.data}" required />
                     </div>
-                    <label class="control-label col-md-3 col-sm-3 col-xs-3">Color</label>
+                    <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Color</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
                         <input class="form-control" type="color" th:value="*{dataSet.backgroundColors}" th:field="*{dataSet.backgroundColors[__${stat.index}__]}" />
                     </div>
                 </div>
-                <div class="form-group" id="submit-btn">
-                    <div class="col-md-6 col-sm-6 col-xs-6 col-md-offset-3 col-sm-offset-3 col-xs-offset-3 text-center">
+                <div class="form-group row" id="submit-btn">
+                    <div class="col-md-6 col-sm-6 col-xs-6 offset-md-3 text-center">
                         <button type="submit" class="btn btn-lg btn-success btn-block submit">Create</button>
                     </div>
                 </div>
