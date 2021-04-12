@@ -79,8 +79,8 @@ public class StatsDAO {
         return charts;
     }
 
-    public String getChart(int chartId){
-        String chartUrl = "";
+    public Chart getChart(int chartId){
+        Chart chart = null;
         String sql = "select * from charts where chart_id=?";
         statement = jdbc.prepareStatement(sql);
         ResultSet rs = null;
@@ -90,7 +90,12 @@ public class StatsDAO {
 
             rs = statement.executeQuery();
             while(rs.next()){
-                chartUrl = rs.getString("chart_url");
+                String title = rs.getString("chart_title");
+                String chartUrl = rs.getString("chart_url");
+                String type = rs.getString("type");
+                int width = rs.getInt("width");
+                int height = rs.getInt("height");
+                chart = new Chart(chartId, title, chartUrl, width, height, type, getLabels(chartId));
             }
 
         }catch(SQLException e){
@@ -98,7 +103,7 @@ public class StatsDAO {
         }finally {
             jdbc.close();
         }
-        return chartUrl;
+        return chart;
     }
 
     public boolean addLabels(ArrayList<String> labels, int chartId) {
@@ -119,6 +124,28 @@ public class StatsDAO {
             success = true;
         }
         return success;
+    }
+
+    public ArrayList<String> getLabels(int chartId){
+        ArrayList<String> labels = new ArrayList<>();
+        String sql = "select * from labels where chart_id=?";
+        statement = jdbc.prepareStatement(sql);
+        ResultSet rs = null;
+
+        try {
+            statement.setInt(1, chartId);
+            rs = statement.executeQuery();
+            while(rs.next()){
+                String label = rs.getString("title");
+                labels.add(label);
+            }
+
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally {
+            jdbc.close();
+        }
+        return labels;
     }
 
     public int addBarDataset(int chartId, DataSet dataSet, String chart_type) {

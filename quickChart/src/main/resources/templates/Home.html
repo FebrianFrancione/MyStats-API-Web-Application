@@ -49,7 +49,7 @@
                     <tr th:each="chart : ${chartList}">
                         <td th:text="${chart.getChartId()}"/>
                         <td th:text="${chart.getTitle()}"/>
-                        <td th:text="${chart.getChartUrl()}"/>
+                        <td><a th:href="@{/chart/viewChart(chartId=${chart.getChartId()})}"><span th:text="${chart.getChartUrl()}"></span></a></td>
                         <td th:text="${chart.getType()}"/>
                         <td th:text="${chart.getWidth()}"/>
                         <td th:text="${chart.getHeight()}"/>

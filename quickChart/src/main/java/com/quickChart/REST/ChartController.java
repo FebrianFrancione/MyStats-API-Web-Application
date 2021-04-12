@@ -40,14 +40,14 @@ public class ChartController implements WebMvcConfigurer {
         return "Signup";
     }
 
-    /*
-    @GetMapping("/Get")
-    public String getChart(Model model) {
-        String chartUrl = chartService.getChart(2);
-        model.addAttribute("get", true);
-        model.addAttribute("chart", chartUrl);
-        return "Chart";
-    }*/
+    @GetMapping("/viewChart")
+    public String viewChart(Model model, @RequestParam int chartId) {
+        Chart chart = chartService.getChart(chartId);
+        String template = chartService.getDataSetTemplate(chart.getType());
+        model.addAttribute("view", true);
+        model.addAttribute("chart", chart);
+        return template;
+    }
 
     @GetMapping("/Post")
     public String showPost(Model model){
@@ -67,6 +67,7 @@ public class ChartController implements WebMvcConfigurer {
         }
 
         model.addAttribute("chart", chart);
+        model.addAttribute("createDataset", true);
         return template;
     }
 

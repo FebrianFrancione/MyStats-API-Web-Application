@@ -26,6 +26,17 @@ public class Chart {
         this.chartUrl = chartUrl;
     }
 
+    public Chart(int chartId, String title, String chartUrl, int width, int height, String type, ArrayList<String> labels) {
+        super();
+        this.chartId = chartId;
+        this.title = title;
+        this.width = width;
+        this.height = height;
+        this.type = type;
+        this.chartUrl = chartUrl;
+        this.labels = labels;
+    }
+
     public int getChartId() {
         return chartId;
     }

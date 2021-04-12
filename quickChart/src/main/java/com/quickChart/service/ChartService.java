@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface ChartService {
-    public String getChart(int chartId);
+    public Chart getChart(int chartId);
     public List<Chart> getCharts(int userId);
     public String createChart(Chart chart);
     public String getDataSetTemplate(String chartType);

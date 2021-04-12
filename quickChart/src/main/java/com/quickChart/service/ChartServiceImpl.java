@@ -18,15 +18,13 @@ public class ChartServiceImpl implements ChartService{
     StatsDAO statsDao = new StatsDAO();
 
     @Override
-    public String getChart(int chartId){
-        String chartUrl = statsDao.getChart(chartId);
-        return chartUrl;
+    public Chart getChart(int chartId){
+        return statsDao.getChart(chartId);
     }
 
     @Override
     public List<Chart> getCharts(int userId){
-        List<Chart> charts = statsDao.getAllCharts(userId);
-        return charts;
+        return statsDao.getAllCharts(userId);
     }
 
     @Override

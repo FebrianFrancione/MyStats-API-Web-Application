@@ -15,40 +15,40 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="chart col-md-offset-3 col-md-4 col-sm-6 col-xs-12">
-            <h2 class="text-center">Chart</h2><hr>
+            <h2 class="text-center"><span th:unless="${createDataset}">Edit your </span>Chart</h2><hr>
 
             <form class="form-postInfo" id="chart-form" role="form" action="#" method="post" th:action="@{/chart/createChart}" th:object="${chart}">
                 <div class="form-group row">
                     <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Chart title</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
-                        <input placeholder="title" class="form-control" type="text" th:value="*{title}" th:field="*{title}" readonly />
+                        <input placeholder="title" class="form-control" type="text" th:value="*{title}" th:field="*{title}" th:readonly="${createDataset}" />
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Width</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
-                        <input placeholder="width" class="form-control" type="text" th:value="*{width}" th:field="*{width}" readonly  />
+                        <input placeholder="width" class="form-control" type="text" th:value="*{width}" th:field="*{width}" th:readonly="${createDataset}"  />
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Height</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
-                        <input placeholder="height" class="form-control" type="text" th:value="*{height}" th:field="*{height}" readonly />
+                        <input placeholder="height" class="form-control" type="text" th:value="*{height}" th:field="*{height}" th:readonly="${createDataset}" />
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Type</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
-                        <input placeholder="type" class="form-control" type="text" th:value="*{type}" th:field="*{type}" readonly />
+                        <input placeholder="type" class="form-control" type="text" th:value="*{type}" th:field="*{type}" th:readonly="${createDataset}" />
                     </div>
                 </div>
                 <div class="labels-group form-group row" th:each="label, stat : *{labels}">
                     <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Label</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
-                        <input placeholder="label" class="form-control" type="text" th:value="${label}" th:field="*{labels[__${stat.index}__]}" readonly/>
+                        <input placeholder="label" class="form-control" type="text" th:value="${label}" th:field="*{labels[__${stat.index}__]}" th:readonly="${createDataset}"/>
                     </div>
                 </div>
                 <div class="form-group row offset-md-4" id="dataset">
