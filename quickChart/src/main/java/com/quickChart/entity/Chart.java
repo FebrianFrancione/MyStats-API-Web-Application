@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Chart {
+    private int chartId;
     private String title = "test chart";
     private int width = 600;
     private int height = 400;
@@ -15,12 +16,22 @@ public class Chart {
     public Chart() {
     }
 
-    public Chart(String title, int width, int height, String type, String label, String border_color, String background_color) {
+    public Chart(int chartId, String title, String chartUrl, int width, int height, String type) {
         super();
+        this.chartId = chartId;
         this.title = title;
         this.width = width;
         this.height = height;
         this.type = type;
+        this.chartUrl = chartUrl;
+    }
+
+    public int getChartId() {
+        return chartId;
+    }
+
+    public void setChartId(int chartId) {
+        this.chartId = chartId;
     }
 
     public String getChartUrl() {
