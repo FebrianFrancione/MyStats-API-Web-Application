@@ -26,7 +26,7 @@ public class Chart {
         this.chartUrl = chartUrl;
     }
 
-    public Chart(int chartId, String title, String chartUrl, int width, int height, String type, ArrayList<String> labels) {
+    public Chart(int chartId, String title, String chartUrl, int width, int height, String type, ArrayList<String> labels, DataSet dataset) {
         super();
         this.chartId = chartId;
         this.title = title;
@@ -35,6 +35,7 @@ public class Chart {
         this.type = type;
         this.chartUrl = chartUrl;
         this.labels = labels;
+        this.dataSet = dataset;
     }
 
     public int getChartId() {

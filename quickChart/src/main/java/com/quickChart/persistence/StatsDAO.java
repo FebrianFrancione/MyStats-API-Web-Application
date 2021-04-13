@@ -17,8 +17,6 @@ public class StatsDAO {
 
     public int addChart(Chart chart, String url) {
         int newID = 0;
-        java.util.Date utilDate = new java.util.Date();
-        Timestamp time_stamp = new Timestamp(utilDate.getTime());
         String sql = "insert into charts (chart_title, chart_url, type, width, height) values (?,?,?,?,?)";
         statement = jdbc.prepareStatementWithKeys(sql);
         try {
@@ -81,7 +79,7 @@ public class StatsDAO {
 
     public Chart getChart(int chartId){
         Chart chart = null;
-        String sql = "select * from charts where chart_id=?";
+        String sql = "SELECT charts.*, datasets.* FROM charts JOIN datasets ON charts.chart_id=datasets.chart_id WHERE charts.chart_id=?";
         statement = jdbc.prepareStatement(sql);
         ResultSet rs = null;
 
@@ -95,7 +93,9 @@ public class StatsDAO {
                 String type = rs.getString("type");
                 int width = rs.getInt("width");
                 int height = rs.getInt("height");
-                chart = new Chart(chartId, title, chartUrl, width, height, type, getLabels(chartId));
+                DataSet dataSet = getDataset(rs, type);
+                dataSet.setData(getData(dataSet.getDatasetId()));
+                chart = new Chart(chartId, title, chartUrl, width, height, type, getLabels(chartId), dataSet);
             }
 
         }catch(SQLException e){
@@ -229,6 +229,44 @@ public class StatsDAO {
         return success;
     }
 
+    public DataSet getDataset(ResultSet rs, String chart_type) {
+        DataSet dataSet = null;
+        String label,border_color,background_color,fill, showLine;
+        int border_width, pointRadius, datasetId;
+
+        try {
+            datasetId = rs.getInt("dataset_id");
+            label = rs.getString("label");
+            border_width = (rs.getInt("border_width")) == 0 ? 2 : rs.getInt("border_width");
+
+            switch (chart_type) {
+                case "bar":
+                    border_color = rs.getString("border_color");
+                    background_color = rs.getString("background_color");
+                    dataSet = new DataSet(datasetId, label, border_color, background_color, border_width);
+                    break;
+                case "line":
+                    border_color = rs.getString("border_color");
+                    background_color = rs.getString("background_color");
+                    fill = (rs.getString("fill")) == null ? "true" : rs.getString("fill");
+                    pointRadius = (rs.getInt("pointRadius")) == 0 ? 3 : rs.getInt("pointRadius");
+                    showLine = (rs.getString("showLine")) == null ? "true" : rs.getString("showLine");
+                    dataSet = new DataSet(datasetId, label, border_color, background_color, border_width, Boolean.parseBoolean(fill), pointRadius, Boolean.parseBoolean(showLine));
+                    break;
+                case "pie":
+                case "doughnut":
+                    //and array of colors
+                    ArrayList<String> backgroundColors = new ArrayList<>();
+                    dataSet = new DataSet(datasetId, label, border_width, backgroundColors);
+                    break;
+            }
+
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+
+        return dataSet;
+    }
     public boolean addData(ArrayList<Integer> data, int datasetId) {
         boolean success = false;
         String sql = "insert into dataset_data (value, dataset_id) values (?,?)";
@@ -247,6 +285,30 @@ public class StatsDAO {
             success = true;
         }
         return success;
+    }
+
+    public ArrayList<Integer> getData(int datasetId) {
+        ArrayList<Integer> data = new ArrayList<>();
+        String sql = "select * from dataset_data where dataset_id=?";
+        statement = jdbc.prepareStatement(sql);
+        ResultSet rs = null;
+
+        try {
+            statement.setInt(1, datasetId);
+            rs = statement.executeQuery();
+            while(rs.next()){
+                int value_id = rs.getInt("value_id");
+                int value = rs.getInt("value");
+                data.add(value);
+            }
+
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally {
+            jdbc.close();
+        }
+
+        return data;
     }
 
     /*

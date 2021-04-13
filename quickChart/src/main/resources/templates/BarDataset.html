@@ -81,16 +81,37 @@
                <div class="dataset-group form-group row" th:each="label, stat : *{labels}">
                     <label class="col-form-label col-md-3 col-sm-3 col-xs-3"><span th:text="${label}"></span> </label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
-                        <input placeholder="data" class="form-control" type="text" th:field="*{dataSet.data}" required />
+                        <div th:if="${createDataset}">
+                            <input placeholder="data" class="form-control" type="text" th:field="*{dataSet.data}" required />
+                        </div>
+                        <div th:unless="${createDataset}">
+                            <input placeholder="data" class="form-control" type="text" th:field="*{dataSet.data[__${stat.index}__]}" required />
+                        </div>
                     </div>
                 </div>
-                <div class="form-group row" id="submit-btn">
+                <div th:if="${createDataset}" class="form-group row" id="submit-btn">
                     <div class="col-md-6 col-sm-6 col-xs-6 offset-md-3 text-center">
                         <button type="submit" class="btn btn-lg btn-success btn-block submit">Create</button>
                     </div>
                 </div>
             </form>
-
+        </div>
+    </div>
+    <div class="row justify-content-center" th:unless="${createDataset}">
+        <div class="col">
+            <div class="row">
+                <div class="col">
+                    <h2 class="text-center">Chart Image</h2>
+                </div>
+            </div>
+            <div class="row" >
+                <div class="col">
+                    <p class="message"> chart URL :  <span th:text="${chart.getChartUrl()}"></span></p>
+                    <div class="my-8">
+                        <img th:src="${chart.getChartUrl()}" alt="Chart"/>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
