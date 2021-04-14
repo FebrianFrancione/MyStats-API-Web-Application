@@ -7,6 +7,7 @@ import com.sendgrid.Request;
 import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 import com.sendgrid.helpers.mail.objects.Personalization;
 import org.json.JSONArray;
@@ -205,45 +206,31 @@ public class ChartServiceImpl implements ChartService{
         return backgroundColors;
     }
 
-    @Value("${spring.sendgrid.templateId}")
-    private String templateId;
-
-    @Autowired
-    SendGrid sendGrid;
-
     @Override
-    public String sendEmail(String email){
-        try {
-            Mail mail = prepareMail(email);
+    public String sendEmail(String email, String url){
+        Email from = new Email("ekdms7027@naver.com");
+        String subject = "From Chart Web Service using SendGrid API";
+        Email to = new Email(email);
+        Content content = new Content("text/plain", url);
+        Mail mail = new Mail(from, subject, to, content);
 
-            Request request = new Request();
+        SendGrid sg = new SendGrid("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");
+        Request request = new Request();
+        try {
             request.setMethod(Method.POST);
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
-            Response response = sendGrid.api(request);
+            Response response = sg.api(request);
+//            System.out.println(response.getStatusCode());
+//            System.out.println(response.getBody());
+//            System.out.println(response.getHeaders());
 
-            if(response != null){
-                System.out.println("Response code from sendgrid " + response.getHeaders());
-            }
-
-        }catch(IOException e){
-            e.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
             return "Error in send grid.";
         }
         return "mail has been sent check your inbox.";
     }
 
-    public Mail prepareMail(String email){
-        Mail mail = new Mail();
-        Email from = new Email();
-        from.setEmail("kiho2735@gmail.com");
-        Email to = new Email();
-        to.setEmail(email);
 
-        Personalization personalization = new Personalization();
-
-        personalization.addTo(to);
-        mail.setTemplateId(templateId);
-        return mail;
-    }
 }
