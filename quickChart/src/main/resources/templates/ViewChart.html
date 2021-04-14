@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+</head>
+<body class="bg-light text-center">
+<div th:insert="nav-bar :: nav"></div>
+<div class="container-fluid">
+    <div class="row justify-content-center" th:if = "${updated}">
+        <div class="col">
+            <div class="alert alert-info alert-dismissible fade show">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <p><strong>Success!</strong> Chart updated</p>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="chart col-md-offset-3 col-md-4 col-sm-6 col-xs-12">
+            <h2 class="text-center">Edit your Chart</h2><hr>
+
+            <div th:if="${barTemplate}" th:insert="BarChart :: bar-form"></div>
+
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col">
+            <div class="row">
+                <div class="col">
+                    <h2 class="text-center">Chart Image</h2>
+                </div>
+            </div>
+            <div class="row" >
+                <div class="col">
+                    <p class="message"> chart URL :  <span th:text="${chart.getChartUrl()}"></span></p>
+                    <div class="my-8">
+                        <img th:src="${chart.getChartUrl()}" alt="Chart"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

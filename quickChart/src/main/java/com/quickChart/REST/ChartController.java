@@ -40,14 +40,14 @@ public class ChartController implements WebMvcConfigurer {
         return "Signup";
     }
 
-    /*
-    @GetMapping("/Get")
-    public String getChart(Model model) {
-        String chartUrl = chartService.getChart(2);
-        model.addAttribute("get", true);
-        model.addAttribute("chart", chartUrl);
-        return "Chart";
-    }*/
+    @GetMapping("/viewChart")
+    public String viewChart(Model model, @RequestParam int chartId) {
+        Chart chart = chartService.getChart(chartId);
+        String template = getChartTemplate(chart.getType());
+        model.addAttribute(template, true);
+        model.addAttribute("chart", chart);
+        return "ViewChart";
+    }
 
     @GetMapping("/Post")
     public String showPost(Model model){
@@ -67,16 +67,47 @@ public class ChartController implements WebMvcConfigurer {
         }
 
         model.addAttribute("chart", chart);
+        model.addAttribute("createDataset", true);
         return template;
     }
 
     @PostMapping( "/createChart")
     public String createChart(Model model, @ModelAttribute("chart") Chart chart) throws IOException {
-        String chartUrl = chartService.createChart(chart);
+        String chartUrl = chartService.createChart(chart,1);
         model.addAttribute("posted", true);
         model.addAttribute("chart", chart);
         return "Chart";
     }
 
+    @PutMapping( "/updateChart")
+    public String updateChart(Model model, @ModelAttribute("chart") Chart chart) throws IOException {
+        boolean updated = chartService.updateChart(chart);
+        String template = getChartTemplate(chart.getType());
+        model.addAttribute(template, true);
+
+        if(updated)
+            model.addAttribute("updated", true);
+
+        model.addAttribute("chart", chart);
+        return "ViewChart";
+    }
+
+    private String getChartTemplate(String type){
+        String template = "";
+
+        switch (type) {
+            case "bar":
+                template = "barTemplate";
+                break;
+            case "line":
+                template = "lineTemplate";
+                break;
+            case "pie":
+            case "doughnut":
+                template = "pieTemplate";
+                break;
+        }
+        return template;
+    }
 
 }

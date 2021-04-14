@@ -1,8 +1,11 @@
 package com.quickChart.entity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DataSet {
+    private int datasetId;
     private ArrayList<Integer> data = new ArrayList<>();
     private String label;
     private String border_color = "#F28E2B";
@@ -12,6 +15,57 @@ public class DataSet {
     private int pointRadius = 3;
     private boolean showLine = true;
     private ArrayList<String> backgroundColors = new ArrayList<>();
+    private Map<Integer, Integer> dataMap = new HashMap<>();
+
+    public DataSet() {
+    }
+
+    /*
+    ** Bar Dataset Constructor
+     */
+    public DataSet(int datasetId, String label, String border_color, String background_color, int borderWidth, Map<Integer, Integer> dataMap) {
+        super();
+        this.label = label;
+        this.border_color = border_color;
+        this.background_color = background_color;
+        this.borderWidth = borderWidth;
+        this.datasetId = datasetId;
+        this.dataMap = dataMap;
+    }
+
+    /*
+     ** Pie/Doughnut Dataset Constructor
+     */
+    public DataSet(int datasetId, String label, int borderWidth, ArrayList<String> backgroundColors) {
+        super();
+        this.label = label;
+        this.borderWidth = borderWidth;
+        this.backgroundColors = backgroundColors;
+        this.datasetId = datasetId;
+    }
+
+    /*
+     ** Line Dataset Constructor
+     */
+    public DataSet(int datasetId, String label, String border_color, String background_color, int borderWidth, boolean fill, int pointRadius, boolean showLine) {
+        super();
+        this.label = label;
+        this.border_color = border_color;
+        this.background_color = background_color;
+        this.borderWidth = borderWidth;
+        this.fill = fill;
+        this.pointRadius = pointRadius;
+        this.showLine = showLine;
+        this.datasetId = datasetId;
+    }
+
+    public int getDatasetId() {
+        return datasetId;
+    }
+
+    public void setDatasetId(int datasetId) {
+        this.datasetId = datasetId;
+    }
 
     public ArrayList<String> getBackgroundColors() {
         return backgroundColors;
@@ -35,19 +89,6 @@ public class DataSet {
 
     public void setPointRadius(int pointRadius) {
         this.pointRadius = pointRadius;
-    }
-
-    public DataSet() {
-    }
-
-    public DataSet(ArrayList<Integer> data, String label, String border_color, String background_color, boolean fill, int borderWidth) {
-        super();
-        this.data = data;
-        this.label = label;
-        this.border_color = border_color;
-        this.background_color = background_color;
-        this.fill = fill;
-        this.borderWidth = borderWidth;
     }
 
     public ArrayList<Integer> getData() {
@@ -96,5 +137,13 @@ public class DataSet {
 
     public void setBorderWidth(int borderWidth) {
         this.borderWidth = borderWidth;
+    }
+
+    public Map<Integer, Integer> getDataMap() {
+        return dataMap;
+    }
+
+    public void setDataMap(Map<Integer, Integer> dataMap) {
+        this.dataMap = dataMap;
     }
 }

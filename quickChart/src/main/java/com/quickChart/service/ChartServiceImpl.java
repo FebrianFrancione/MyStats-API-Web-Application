@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import io.quickchart.QuickChart;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -16,21 +17,20 @@ import java.util.stream.Collectors;
 public class ChartServiceImpl implements ChartService{
 
     StatsDAO statsDao = new StatsDAO();
+    private boolean update = false;
 
     @Override
-    public String getChart(int chartId){
-        String chartUrl = statsDao.getChart(chartId);
-        return chartUrl;
+    public Chart getChart(int chartId){
+        return statsDao.getChart(chartId);
     }
 
     @Override
     public List<Chart> getCharts(int userId){
-        List<Chart> charts = statsDao.getAllCharts(userId);
-        return charts;
+        return statsDao.getAllCharts(userId);
     }
 
     @Override
-    public String createChart(Chart chart){
+    public String createChart(Chart chart, int userId){
 
         String labels = setLabels(chart.getLabels());
         DataSet dataSet = chart.getDataSet();
@@ -57,7 +57,7 @@ public class ChartServiceImpl implements ChartService{
         );
 
         String chartUrl = Quickchart.getShortUrl();
-        int chartId = statsDao.addChart(chart, chartUrl);
+        int chartId = statsDao.addChart(chart, chartUrl, userId);
 
         if(chartId >= 1) {
             System.out.println("Chart has been created with ID " + chartId);
@@ -85,6 +85,54 @@ public class ChartServiceImpl implements ChartService{
         return chartUrl;
     }
 
+    @Override
+    public boolean updateChart(Chart chart){
+
+        update = true;
+        boolean chartUpdated = true;
+        String labels = setLabelsMap(chart.getLabelsMap());
+        DataSet dataSet = chart.getDataSet();
+        String dataSets = setDataset(chart.getType(), dataSet);
+
+        QuickChart Quickchart = new QuickChart();
+        Quickchart.setWidth(chart.getWidth());
+        Quickchart.setHeight(chart.getHeight());
+        Quickchart.setConfig("{"
+                + "    type: '"+ chart.getType() +"',"
+                + "    data: {"
+                +          labels
+                + "        datasets: ["
+                +               dataSets
+                + "        ]"
+                + "    },"
+                + "    options: {"
+                + "        title: {"
+                + "            display: true,"
+                + "            text: '"+ chart.getTitle() +"'"
+                + "        }"
+                + "    }"
+                + "}"
+        );
+
+        String chartUrl = Quickchart.getShortUrl();
+        chart.setChartUrl(chartUrl);
+        if(!statsDao.updateChart(chart, chartUrl))
+            chartUpdated = false;
+
+        statsDao.updateLabels(chart.getLabelsMap());
+
+        if(chart.getType().compareTo("bar") == 0)
+            if(!statsDao.updateBarDataset(dataSet))
+                chartUpdated = false;
+
+        if(!statsDao.updateData(dataSet.getDataMap()))
+            chartUpdated = false;
+
+        chart.setLabels(new ArrayList<>(chart.getLabelsMap().values()));
+        update = false;
+        return chartUpdated;
+    }
+
     public String setLabels(ArrayList<String> labelsList){
         StringBuilder labels = new StringBuilder();
         labels.append(" labels: [");
@@ -101,6 +149,14 @@ public class ChartServiceImpl implements ChartService{
         return labels.toString();
     }
 
+    public String setLabelsMap(Map<Integer, String> labelsMap){
+        StringBuilder labels = new StringBuilder();
+        labels.append(" labels: [");
+        String values = labelsMap.values().stream().collect(Collectors.joining("','", "'", "'"));
+        labels.append(values).append("],");
+        return labels.toString();
+    }
+
     public String setBarDataset(DataSet dataSet){
         StringBuilder dataSetJson = new StringBuilder();
         dataSetJson.append("{\n");
@@ -108,7 +164,13 @@ public class ChartServiceImpl implements ChartService{
         String bgrColor = "\tbackgroundColor: '"+ dataSet.getBackground_color() + "',\n";
         String borderColor = "\tborderColor: '"+ dataSet.getBorder_color() + "',\n";
         String borderWidth = "\tborderWidth: "+ dataSet.getBorderWidth() + ",\n";
-        ArrayList<Integer> data = dataSet.getData();
+        ArrayList<Integer> data = new ArrayList<>();
+        if(update){
+            data = new ArrayList<>(dataSet.getDataMap().values());
+        }
+        else
+            data = dataSet.getData();
+
         dataSetJson.append(label).append(bgrColor).append(borderColor).append(borderWidth).append("\tdata: " + data);
         dataSetJson.append("\n},\n");
         return dataSetJson.toString();
