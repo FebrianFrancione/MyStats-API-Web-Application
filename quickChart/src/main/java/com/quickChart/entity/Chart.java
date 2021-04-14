@@ -2,6 +2,8 @@ package com.quickChart.entity;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Chart {
     private int chartId;
@@ -12,6 +14,7 @@ public class Chart {
     private ArrayList<String> labels = new ArrayList<>();
     private DataSet dataSet;
     private String chartUrl;
+    private Map<Integer, String> labelsMap = new HashMap<>();
 
     public Chart() {
     }
@@ -26,7 +29,7 @@ public class Chart {
         this.chartUrl = chartUrl;
     }
 
-    public Chart(int chartId, String title, String chartUrl, int width, int height, String type, ArrayList<String> labels, DataSet dataset) {
+    public Chart(int chartId, String title, String chartUrl, int width, int height, String type, Map<Integer, String> labelsMap, DataSet dataset) {
         super();
         this.chartId = chartId;
         this.title = title;
@@ -34,8 +37,12 @@ public class Chart {
         this.height = height;
         this.type = type;
         this.chartUrl = chartUrl;
-        this.labels = labels;
+        this.labelsMap = labelsMap;
         this.dataSet = dataset;
+
+        for (Map.Entry<Integer, String> label : labelsMap.entrySet()) {
+            labels.add(label.getValue());
+        }
     }
 
     public int getChartId() {
@@ -102,4 +109,11 @@ public class Chart {
         this.type = type;
     }
 
+    public Map<Integer, String> getLabelsMap() {
+        return labelsMap;
+    }
+
+    public void setLabelsMap(Map<Integer, String> labelsMap) {
+        this.labelsMap = labelsMap;
+    }
 }

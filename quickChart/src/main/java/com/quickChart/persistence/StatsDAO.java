@@ -9,15 +9,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StatsDAO {
     private PreparedStatement statement = null;
     private JDBConfig jdbc = new JDBConfig();
 
-    public int addChart(Chart chart, String url) {
+    public int addChart(Chart chart, String url, int userId) {
         int newID = 0;
-        String sql = "insert into charts (chart_title, chart_url, type, width, height) values (?,?,?,?,?)";
+        String sql = "insert into charts (chart_title, chart_url, type, width, height, user_id) values (?,?,?,?,?,?)";
         statement = jdbc.prepareStatementWithKeys(sql);
         try {
             statement.setString(1, chart.getTitle());
@@ -25,6 +27,7 @@ public class StatsDAO {
             statement.setString(3, chart.getType());
             statement.setInt(4, chart.getWidth());
             statement.setInt(5, chart.getHeight());
+            statement.setInt(6, userId);
             int insertedRow = statement.executeUpdate();
 
             if (insertedRow == 0) {
@@ -48,6 +51,47 @@ public class StatsDAO {
         return newID;
     }
 
+    public boolean updateChart(Chart chart, String url){
+        boolean isUpdated = false;
+        String sql = "update charts set chart_title=?, chart_url=?, width=?, height=? where chart_id=?";
+        statement = jdbc.prepareStatement(sql);
+        try {
+            statement.setString(1, chart.getTitle());
+            statement.setString(2, url);
+            statement.setInt(3, chart.getWidth());
+            statement.setInt(4, chart.getHeight());
+            statement.setInt(5, chart.getChartId());
+            statement.executeUpdate();
+            int updatedRow = statement.executeUpdate();
+            if(updatedRow > 0)
+                isUpdated = true;
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally {
+            jdbc.close();
+        }
+
+        return isUpdated;
+    }
+
+    public void updateLabels(Map<Integer, String> labelsMap){
+
+        String sql = "update labels set title=? where label_id=?";
+        statement = jdbc.prepareStatement(sql);
+        try {
+            for (Map.Entry<Integer, String> label : labelsMap.entrySet()) {
+                statement.setString(1, label.getValue());
+                statement.setInt(2, label.getKey());
+                statement.executeUpdate();
+            }
+
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally {
+            jdbc.close();
+        }
+
+    }
     public List<Chart> getAllCharts(int userId){
         List<Chart> charts = new ArrayList<>();
         int chartId, width, height;
@@ -94,7 +138,7 @@ public class StatsDAO {
                 int width = rs.getInt("width");
                 int height = rs.getInt("height");
                 DataSet dataSet = getDataset(rs, type);
-                dataSet.setData(getData(dataSet.getDatasetId()));
+                //dataSet.setData(getData(dataSet.getDatasetId()));
                 chart = new Chart(chartId, title, chartUrl, width, height, type, getLabels(chartId), dataSet);
             }
 
@@ -126,8 +170,8 @@ public class StatsDAO {
         return success;
     }
 
-    public ArrayList<String> getLabels(int chartId){
-        ArrayList<String> labels = new ArrayList<>();
+    public Map<Integer, String> getLabels(int chartId){
+        Map<Integer, String> labels = new HashMap<Integer, String>();
         String sql = "select * from labels where chart_id=?";
         statement = jdbc.prepareStatement(sql);
         ResultSet rs = null;
@@ -136,8 +180,9 @@ public class StatsDAO {
             statement.setInt(1, chartId);
             rs = statement.executeQuery();
             while(rs.next()){
+                int label_id = rs.getInt("label_id");
                 String label = rs.getString("title");
-                labels.add(label);
+                labels.put(label_id, label);
             }
 
         }catch(SQLException e){
@@ -243,7 +288,8 @@ public class StatsDAO {
                 case "bar":
                     border_color = rs.getString("border_color");
                     background_color = rs.getString("background_color");
-                    dataSet = new DataSet(datasetId, label, border_color, background_color, border_width);
+                    Map<Integer, Integer> dataMap = getData(datasetId);
+                    dataSet = new DataSet(datasetId, label, border_color, background_color, border_width, dataMap);
                     break;
                 case "line":
                     border_color = rs.getString("border_color");
@@ -287,8 +333,8 @@ public class StatsDAO {
         return success;
     }
 
-    public ArrayList<Integer> getData(int datasetId) {
-        ArrayList<Integer> data = new ArrayList<>();
+    public Map<Integer, Integer> getData(int datasetId) {
+        Map<Integer, Integer> data = new HashMap<>();
         String sql = "select * from dataset_data where dataset_id=?";
         statement = jdbc.prepareStatement(sql);
         ResultSet rs = null;
@@ -299,7 +345,7 @@ public class StatsDAO {
             while(rs.next()){
                 int value_id = rs.getInt("value_id");
                 int value = rs.getInt("value");
-                data.add(value);
+                data.put(value_id, value);
             }
 
         }catch(SQLException e){
@@ -309,6 +355,46 @@ public class StatsDAO {
         }
 
         return data;
+    }
+
+    public boolean updateData(Map<Integer, Integer> dataMap) {
+        boolean success = false;
+        String sql = "update dataset_data set value=? where value_id=?";
+        statement = jdbc.prepareStatement(sql);
+        try {
+            for (Map.Entry<Integer, Integer> data : dataMap.entrySet()) {
+                statement.setInt(1, data.getValue());
+                statement.setInt(2, data.getKey());
+                statement.executeUpdate();
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally {
+            jdbc.close();
+            success = true;
+        }
+        return success;
+    }
+
+    public boolean updateBarDataset(DataSet dataSet) {
+        boolean isUpdated = false;
+        String sql = "update datasets set label=?, border_color=?, background_color=?, border_width=? where dataset_id=?";
+        statement = jdbc.prepareStatement(sql);
+        try {
+            statement.setString(1, dataSet.getLabel());
+            statement.setString(2, dataSet.getBorder_color());
+            statement.setString(3, dataSet.getBackground_color());
+            statement.setInt(4, dataSet.getBorderWidth());
+            statement.setInt(5, dataSet.getDatasetId());
+            int updatedRow = statement.executeUpdate();
+            if(updatedRow > 0)
+                isUpdated = true;
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally {
+            jdbc.close();
+        }
+        return isUpdated;
     }
 
     /*

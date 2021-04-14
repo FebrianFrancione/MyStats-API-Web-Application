@@ -1,6 +1,8 @@
 package com.quickChart.entity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DataSet {
     private int datasetId;
@@ -13,6 +15,7 @@ public class DataSet {
     private int pointRadius = 3;
     private boolean showLine = true;
     private ArrayList<String> backgroundColors = new ArrayList<>();
+    private Map<Integer, Integer> dataMap = new HashMap<>();
 
     public DataSet() {
     }
@@ -20,13 +23,14 @@ public class DataSet {
     /*
     ** Bar Dataset Constructor
      */
-    public DataSet(int datasetId, String label, String border_color, String background_color, int borderWidth) {
+    public DataSet(int datasetId, String label, String border_color, String background_color, int borderWidth, Map<Integer, Integer> dataMap) {
         super();
         this.label = label;
         this.border_color = border_color;
         this.background_color = background_color;
         this.borderWidth = borderWidth;
         this.datasetId = datasetId;
+        this.dataMap = dataMap;
     }
 
     /*
@@ -133,5 +137,13 @@ public class DataSet {
 
     public void setBorderWidth(int borderWidth) {
         this.borderWidth = borderWidth;
+    }
+
+    public Map<Integer, Integer> getDataMap() {
+        return dataMap;
+    }
+
+    public void setDataMap(Map<Integer, Integer> dataMap) {
+        this.dataMap = dataMap;
     }
 }
