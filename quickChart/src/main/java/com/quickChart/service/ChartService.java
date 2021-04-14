@@ -11,4 +11,5 @@ public interface ChartService {
     public String createChart(Chart chart);
     public String getDataSetTemplate(String chartType);
     public ArrayList<String> generateColors(int length);
+    public String sendEmail(String email);
 }

@@ -2,7 +2,12 @@ package com.quickChart.REST;
 
 import com.quickChart.entity.Chart;
 import com.quickChart.entity.DataSet;
+import com.quickChart.entity.EmailInfo;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +21,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import com.sendgrid.*;
 
 @Controller
 @RequestMapping(value = "/chart", produces = {MediaType.APPLICATION_JSON_VALUE}, method = {RequestMethod.GET, RequestMethod.POST,RequestMethod.PUT, RequestMethod.DELETE})
 public class ChartController implements WebMvcConfigurer {
 
+    @Autowired
     private ChartService chartService;
 
     @Autowired
@@ -55,6 +62,11 @@ public class ChartController implements WebMvcConfigurer {
         return "CreateChart";
     }
 
+    @GetMapping("/Send")
+    public String sendLink(Model model){
+        model.addAttribute("email", new EmailInfo());
+        return "SendChart";
+    }
 
     @PostMapping( "/createDataSet")
     public String createDataSet(Model model, @ModelAttribute("chart") Chart chart) throws IOException {
@@ -78,5 +90,34 @@ public class ChartController implements WebMvcConfigurer {
         return "Chart";
     }
 
+//    @Autowired
+//    private SendGrid sendGrid;
+
+//    @Value("${templateId}")
+//    private String EMAIL_TEMPLATE_ID;
+
+    @PostMapping("/sendGrid")
+    public void sendEmail(Model model, @ModelAttribute("email") EmailInfo emailInfo) throws IOException{
+//        Email from = new Email("kiho2735@gmail.com");
+//        String subject = "Sending a chart url using SendGrid API";
+//        Email to = new Email(emailInfo.getEmailTo());
+//        Content content = new Content("text/html", emailInfo.getChartUrl() );
+//        Mail mail = new Mail(from, subject, to, content);
+//
+//        SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
+//        Request request = new Request();
+//        try{
+//            request.setMethod(Method.POST);
+//            request.setEndpoint("mail/send");
+//            request.setBody(mail.build());
+//            Response response = sg.api(request);
+//            System.out.println(response.getStatusCode());
+//            System.out.println(response.getBody());
+//            System.out.println(response.getHeaders());
+//        }catch(IOException e){
+//            throw e;
+//        }
+        chartService.sendEmail(emailInfo.getEmailTo());
+    }
 
 }
