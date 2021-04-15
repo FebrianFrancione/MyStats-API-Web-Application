@@ -17,7 +17,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import io.quickchart.QuickChart;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
@@ -230,6 +233,16 @@ public class ChartServiceImpl implements ChartService{
             return "Error in send grid.";
         }
         return "mail has been sent check your inbox.";
+    }
+
+    @Override
+    public void downloadImg(String name, String url) {
+        try(InputStream in = new URL(url).openStream()){
+            Files.copy(in, Paths.get("C:\\Users\\kiho2\\Desktop\\Concordia\\" + name +".jpg"));
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+
     }
 
 

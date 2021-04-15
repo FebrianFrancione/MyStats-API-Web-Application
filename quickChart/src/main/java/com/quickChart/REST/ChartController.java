@@ -2,6 +2,7 @@ package com.quickChart.REST;
 
 import com.quickChart.entity.Chart;
 import com.quickChart.entity.DataSet;
+import com.quickChart.entity.Download;
 import com.quickChart.entity.EmailInfo;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
@@ -68,6 +69,12 @@ public class ChartController implements WebMvcConfigurer {
         return "SendChart";
     }
 
+    @GetMapping("/Download")
+    public String download(Model model){
+        model.addAttribute("download", new Download());
+        return "DownloadChart";
+    }
+
     @PostMapping( "/createDataSet")
     public String createDataSet(Model model, @ModelAttribute("chart") Chart chart) throws IOException {
         String template = chartService.getDataSetTemplate(chart.getType());
@@ -96,6 +103,13 @@ public class ChartController implements WebMvcConfigurer {
         System.out.println(chartService.sendEmail(emailInfo.getEmailTo(), emailInfo.getChartUrl()));
         model.addAttribute("posted", true);
         return "SendChart";
+    }
+
+    @PostMapping("downloadChart")
+    public String downloadChart(Model model, @ModelAttribute("download") Download download){
+        chartService.downloadImg(download.getName(), download.getChartUrl());
+        model.addAttribute("posted", true);
+        return "DownloadChart";
     }
 
 }
