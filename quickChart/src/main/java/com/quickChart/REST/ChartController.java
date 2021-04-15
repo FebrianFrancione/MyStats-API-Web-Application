@@ -139,4 +139,26 @@ public class ChartController implements WebMvcConfigurer {
         return template;
     }
 
+    @PostMapping("/upload")
+    public String uploadFile(Model model, @ModelAttribute("chart") Chart chart, @RequestParam("file") MultipartFile file){
+        String charturl = chartService.uploadChart(chart, file);
+        model.addAttribute("posted", true);
+        model.addAttribute("chart", chart);
+        return "Chart";
+    }
+
+    @PostMapping("/sendGrid")
+    public String sendEmail(Model model, @ModelAttribute("email") EmailInfo emailInfo) throws IOException{
+        System.out.println(chartService.sendEmail(emailInfo.getEmailTo(), emailInfo.getChartUrl()));
+        model.addAttribute("posted", true);
+        return "SendChart";
+    }
+
+    @PostMapping("downloadChart")
+    public String downloadChart(Model model, @ModelAttribute("download") Download download){
+        chartService.downloadImg(download.getName(), download.getChartUrl());
+        model.addAttribute("posted", true);
+        return "DownloadChart";
+    }
+
 }

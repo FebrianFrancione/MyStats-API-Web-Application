@@ -352,7 +352,7 @@ public class ChartServiceImpl implements ChartService{
             chart.setLabels(labels);
             chart.getDataSet().setData(data);
 
-            return createChart(chart);
+            return createChart(chart,1);
 
         }catch(IOException e){
             e.printStackTrace();
