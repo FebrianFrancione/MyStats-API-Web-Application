@@ -18,9 +18,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.quickChart.service.ChartService;
+
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import com.sendgrid.*;
 
@@ -75,6 +79,12 @@ public class ChartController implements WebMvcConfigurer {
         return "DownloadChart";
     }
 
+    @GetMapping("/UploadFile")
+    public String uploadLink(Model model){
+        model.addAttribute("chart", new Chart());
+        return "UploadFile";
+    }
+
     @PostMapping( "/createDataSet")
     public String createDataSet(Model model, @ModelAttribute("chart") Chart chart) throws IOException {
         String template = chartService.getDataSetTemplate(chart.getType());
@@ -97,6 +107,13 @@ public class ChartController implements WebMvcConfigurer {
         return "Chart";
     }
 
+    @PostMapping("/upload")
+    public String uploadFile(Model model, @ModelAttribute("chart") Chart chart, @RequestParam("file") MultipartFile file){
+        String charturl = chartService.uploadChart(chart, file);
+        model.addAttribute("posted", true);
+        model.addAttribute("chart", chart);
+        return "Chart";
+    }
 
     @PostMapping("/sendGrid")
     public String sendEmail(Model model, @ModelAttribute("email") EmailInfo emailInfo) throws IOException{

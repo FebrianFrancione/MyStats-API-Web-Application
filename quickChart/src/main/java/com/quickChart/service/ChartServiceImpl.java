@@ -16,11 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import io.quickchart.QuickChart;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
@@ -243,6 +245,64 @@ public class ChartServiceImpl implements ChartService{
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public String uploadChart(Chart chart, MultipartFile file){
+        // List<List<String>> list = new ArrayList<List<String>>();
+        BufferedReader br = null;
+        try{
+            br = new BufferedReader(new InputStreamReader(file.getInputStream()));
+            String line = "";
+
+            ArrayList<String> labels = new ArrayList<>();
+            ArrayList<Integer> labelOrder = new ArrayList<>(); // [0,2,4]
+            ArrayList<Integer> data = new ArrayList<Integer>();
+            ArrayList<Integer> dataOrder = new ArrayList<>(); // [1,3,5]
+
+            boolean flag = false;
+            while((line=br.readLine()) != null) {
+                // System.out.println(line);
+                String[] token = line.split(",");
+                if(flag){
+                    for(int i = 0; i < labelOrder.size() ; i++){
+                        labels.add(token[labelOrder.get(i)]);
+                    }
+                    for(int i = 0 ; i < dataOrder.size() ; i++){
+                        int value = Integer.parseInt(token[dataOrder.get(i)]);
+                        data.add(value);
+                    }
+                }else{
+                    for(int i = 0; i < token.length; i++){
+                        if(token[i].equalsIgnoreCase("label")){
+                            labelOrder.add(i);
+                        }else if(token[i].equalsIgnoreCase("value")){
+                            dataOrder.add(i);
+                        }
+                    }
+                    flag = true;
+                }
+
+                //List<String> tempList = new ArrayList<String>(Arrays.asList(token));
+                //list.add(tempList);
+
+            }
+            chart.setLabels(labels);
+            chart.getDataSet().setData(data);
+
+            return createChart(chart);
+
+        }catch(IOException e){
+            e.printStackTrace();
+            return "Error in uploading";
+        }finally {
+            try {
+                if(br != null)
+                    br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
