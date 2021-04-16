@@ -16,6 +16,7 @@ public class DataSet {
     private boolean showLine = true;
     private ArrayList<String> backgroundColors = new ArrayList<>();
     private Map<Integer, Integer> dataMap = new HashMap<>();
+    private Map<Integer, String> backgroundColorMap = new HashMap<>();
 
     public DataSet() {
     }
@@ -36,18 +37,23 @@ public class DataSet {
     /*
      ** Pie/Doughnut Dataset Constructor
      */
-    public DataSet(int datasetId, String label, int borderWidth, ArrayList<String> backgroundColors) {
+    public DataSet(int datasetId, String label, int borderWidth, Map<Integer, String> backgroundColorMap, Map<Integer, Integer> dataMap) {
         super();
         this.label = label;
         this.borderWidth = borderWidth;
-        this.backgroundColors = backgroundColors;
+        this.backgroundColorMap = backgroundColorMap;
         this.datasetId = datasetId;
+        this.dataMap = dataMap;
+
+        for (Map.Entry<Integer, String> color : backgroundColorMap.entrySet()) {
+            backgroundColors.add(color.getValue());
+        }
     }
 
     /*
      ** Line Dataset Constructor
      */
-    public DataSet(int datasetId, String label, String border_color, String background_color, int borderWidth, boolean fill, int pointRadius, boolean showLine) {
+    public DataSet(int datasetId, String label, String border_color, String background_color, int borderWidth, boolean fill, int pointRadius, boolean showLine, Map<Integer, Integer> dataMap) {
         super();
         this.label = label;
         this.border_color = border_color;
@@ -57,6 +63,7 @@ public class DataSet {
         this.pointRadius = pointRadius;
         this.showLine = showLine;
         this.datasetId = datasetId;
+        this.dataMap = dataMap;
     }
 
     public int getDatasetId() {
@@ -145,5 +152,13 @@ public class DataSet {
 
     public void setDataMap(Map<Integer, Integer> dataMap) {
         this.dataMap = dataMap;
+    }
+
+    public Map<Integer, String> getBackgroundColorMap() {
+        return backgroundColorMap;
+    }
+
+    public void setBackgroundColorMap(Map<Integer, String> backgroundColorMap) {
+        this.backgroundColorMap = backgroundColorMap;
     }
 }

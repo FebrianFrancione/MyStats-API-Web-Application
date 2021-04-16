@@ -138,7 +138,6 @@ public class StatsDAO {
                 int width = rs.getInt("width");
                 int height = rs.getInt("height");
                 DataSet dataSet = getDataset(rs, type);
-                //dataSet.setData(getData(dataSet.getDatasetId()));
                 chart = new Chart(chartId, title, chartUrl, width, height, type, getLabels(chartId), dataSet);
             }
 
@@ -191,6 +190,29 @@ public class StatsDAO {
             jdbc.close();
         }
         return labels;
+    }
+
+    public Map<Integer, String> getBackgroundColors(int datasetId){
+        Map<Integer, String> colors = new HashMap<>();
+        String sql = "select * from background_colors where dataset_id=?";
+        statement = jdbc.prepareStatement(sql);
+        ResultSet rs = null;
+
+        try {
+            statement.setInt(1, datasetId);
+            rs = statement.executeQuery();
+            while(rs.next()){
+                int color_id = rs.getInt("color_id");
+                String color = rs.getString("color");
+                colors.put(color_id, color);
+            }
+
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally {
+            jdbc.close();
+        }
+        return colors;
     }
 
     public int addBarDataset(int chartId, DataSet dataSet, String chart_type) {
@@ -283,12 +305,12 @@ public class StatsDAO {
             datasetId = rs.getInt("dataset_id");
             label = rs.getString("label");
             border_width = (rs.getInt("border_width")) == 0 ? 2 : rs.getInt("border_width");
+            Map<Integer, Integer> dataMap = getData(datasetId);
 
             switch (chart_type) {
                 case "bar":
                     border_color = rs.getString("border_color");
                     background_color = rs.getString("background_color");
-                    Map<Integer, Integer> dataMap = getData(datasetId);
                     dataSet = new DataSet(datasetId, label, border_color, background_color, border_width, dataMap);
                     break;
                 case "line":
@@ -297,13 +319,11 @@ public class StatsDAO {
                     fill = (rs.getString("fill")) == null ? "true" : rs.getString("fill");
                     pointRadius = (rs.getInt("pointRadius")) == 0 ? 3 : rs.getInt("pointRadius");
                     showLine = (rs.getString("showLine")) == null ? "true" : rs.getString("showLine");
-                    dataSet = new DataSet(datasetId, label, border_color, background_color, border_width, Boolean.parseBoolean(fill), pointRadius, Boolean.parseBoolean(showLine));
+                    dataSet = new DataSet(datasetId, label, border_color, background_color, border_width, Boolean.parseBoolean(fill), pointRadius, Boolean.parseBoolean(showLine), dataMap);
                     break;
                 case "pie":
                 case "doughnut":
-                    //and array of colors
-                    ArrayList<String> backgroundColors = new ArrayList<>();
-                    dataSet = new DataSet(datasetId, label, border_width, backgroundColors);
+                    dataSet = new DataSet(datasetId, label, border_width, getBackgroundColors(datasetId), dataMap);
                     break;
             }
 
@@ -393,6 +413,68 @@ public class StatsDAO {
             e.printStackTrace();
         }finally {
             jdbc.close();
+        }
+        return isUpdated;
+    }
+
+    public boolean updateLineDataset(DataSet dataSet) {
+        boolean isUpdated = false;
+        String sql = "update datasets set label=?, border_color=?, background_color=?, border_width=?, fill=?, pointRadius=?, showLine=? where dataset_id=?";
+        statement = jdbc.prepareStatement(sql);
+        try {
+            statement.setString(1, dataSet.getLabel());
+            statement.setString(2, dataSet.getBorder_color());
+            statement.setString(3, dataSet.getBackground_color());
+            statement.setInt(4, dataSet.getBorderWidth());
+            statement.setString(5, String.valueOf(dataSet.isFill()));
+            statement.setInt(6, dataSet.getPointRadius());
+            statement.setString(7, String.valueOf(dataSet.isShowLine()));
+            statement.setInt(8, dataSet.getDatasetId());
+            int updatedRow = statement.executeUpdate();
+            if(updatedRow > 0)
+                isUpdated = true;
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally {
+            jdbc.close();
+        }
+        return isUpdated;
+    }
+
+    public boolean updatePieDataset(DataSet dataSet) {
+        boolean isUpdated = false;
+        String sql = "update datasets set label=?, border_width=? where dataset_id=?";
+        statement = jdbc.prepareStatement(sql);
+        try {
+            statement.setString(1, dataSet.getLabel());
+            statement.setInt(2, dataSet.getBorderWidth());
+            statement.setInt(3, dataSet.getDatasetId());
+            int updatedRow = statement.executeUpdate();
+            if(updatedRow > 0)
+                isUpdated = true;
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally {
+            jdbc.close();
+        }
+        return isUpdated;
+    }
+
+    public boolean updateBackgroundColors(Map<Integer, String> backgroundColors) {
+        boolean isUpdated = false;
+        String sql = "update background_colors set color=? where color_id=?";
+        statement = jdbc.prepareStatement(sql);
+        try {
+            for (Map.Entry<Integer, String> color : backgroundColors.entrySet()) {
+                statement.setString(1, color.getValue());
+                statement.setInt(2, color.getKey());
+                statement.executeUpdate();
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally {
+            jdbc.close();
+            isUpdated = true;
         }
         return isUpdated;
     }

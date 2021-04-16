@@ -141,6 +141,19 @@ public class ChartServiceImpl implements ChartService{
             if(!statsDao.updateBarDataset(dataSet))
                 chartUpdated = false;
 
+        if(chart.getType().compareTo("line") == 0)
+            if(!statsDao.updateLineDataset(dataSet))
+                chartUpdated = false;
+
+        if(chart.getType().compareTo("pie") == 0 || chart.getType().compareTo("doughnut")== 0){
+
+            if(!statsDao.updatePieDataset(dataSet))
+                chartUpdated = false;
+
+            if(!statsDao.updateBackgroundColors(dataSet.getBackgroundColorMap()))
+                chartUpdated = false;
+        }
+
         if(!statsDao.updateData(dataSet.getDataMap()))
             chartUpdated = false;
 
@@ -180,7 +193,7 @@ public class ChartServiceImpl implements ChartService{
         String bgrColor = "\tbackgroundColor: '"+ dataSet.getBackground_color() + "',\n";
         String borderColor = "\tborderColor: '"+ dataSet.getBorder_color() + "',\n";
         String borderWidth = "\tborderWidth: "+ dataSet.getBorderWidth() + ",\n";
-        ArrayList<Integer> data = new ArrayList<>();
+        ArrayList<Integer> data;
         if(update){
             data = new ArrayList<>(dataSet.getDataMap().values());
         }
@@ -202,7 +215,12 @@ public class ChartServiceImpl implements ChartService{
         String fill = "\tfill: "+ dataSet.isFill() + ",\n";
         String pointRadius = "\tpointRadius: "+ dataSet.getPointRadius() + ",\n";
         String showLine = "\tshowLine: "+ dataSet.isShowLine() + ",\n";
-        ArrayList<Integer> data = dataSet.getData();
+        ArrayList<Integer> data;
+        if(update){
+            data = new ArrayList<>(dataSet.getDataMap().values());
+        }
+        else
+            data = dataSet.getData();
         dataSetJson.append(label).append(bgrColor).append(borderColor).append(borderWidth).append(fill)
                 .append(pointRadius).append(showLine).append("\tdata: " + data);
 
@@ -215,9 +233,22 @@ public class ChartServiceImpl implements ChartService{
         dataSetJson.append("{\n");
         String label = "\tlabel: '"+ dataSet.getLabel() +"',\n";
         String borderWidth = "\tborderWidth: "+ dataSet.getBorderWidth() + ",\n";
-        String colors = dataSet.getBackgroundColors().stream().collect(Collectors.joining("','", "'", "'"));
+
+        ArrayList<Integer> data;
+        ArrayList<String> backgroundColors;
+        if(update){
+            data = new ArrayList<>(dataSet.getDataMap().values());
+            backgroundColors = new ArrayList<>(dataSet.getBackgroundColorMap().values());
+        }
+        else {
+            data = dataSet.getData();
+            backgroundColors = dataSet.getBackgroundColors();
+        }
+
+        String colors = backgroundColors.stream().collect(Collectors.joining("','", "'", "'"));
         String backgroundColor = "\tbackgroundColor: ["+ colors + "],\n";
-        ArrayList<Integer> data = dataSet.getData();
+
+
         dataSetJson.append(label).append(borderWidth).append(backgroundColor).append("\tdata: "+ data);
         dataSetJson.append("\n},\n");
         return dataSetJson.toString();
