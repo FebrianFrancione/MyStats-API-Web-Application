@@ -2,7 +2,13 @@ package com.quickChart.REST;
 
 import com.quickChart.entity.Chart;
 import com.quickChart.entity.DataSet;
+import com.quickChart.entity.Download;
+import com.quickChart.entity.EmailInfo;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,15 +18,21 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.quickChart.service.ChartService;
+
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import com.sendgrid.*;
 
 @Controller
 @RequestMapping(value = "/chart", produces = {MediaType.APPLICATION_JSON_VALUE}, method = {RequestMethod.GET, RequestMethod.POST,RequestMethod.PUT, RequestMethod.DELETE})
 public class ChartController implements WebMvcConfigurer {
 
+    @Autowired
     private ChartService chartService;
 
     @Autowired
@@ -55,6 +67,23 @@ public class ChartController implements WebMvcConfigurer {
         return "CreateChart";
     }
 
+    @GetMapping("/Send")
+    public String sendLink(Model model){
+        model.addAttribute("email", new EmailInfo());
+        return "SendChart";
+    }
+
+    @GetMapping("/Download")
+    public String download(Model model){
+        model.addAttribute("download", new Download());
+        return "DownloadChart";
+    }
+
+    @GetMapping("/UploadFile")
+    public String uploadLink(Model model){
+        model.addAttribute("chart", new Chart());
+        return "UploadFile";
+    }
 
     @PostMapping( "/createDataSet")
     public String createDataSet(Model model, @ModelAttribute("chart") Chart chart) throws IOException {
@@ -108,6 +137,28 @@ public class ChartController implements WebMvcConfigurer {
                 break;
         }
         return template;
+    }
+
+    @PostMapping("/upload")
+    public String uploadFile(Model model, @ModelAttribute("chart") Chart chart, @RequestParam("file") MultipartFile file){
+        String charturl = chartService.uploadChart(chart, file);
+        model.addAttribute("posted", true);
+        model.addAttribute("chart", chart);
+        return "Chart";
+    }
+
+    @PostMapping("/sendGrid")
+    public String sendEmail(Model model, @ModelAttribute("email") EmailInfo emailInfo) throws IOException{
+        System.out.println(chartService.sendEmail(emailInfo.getEmailTo(), emailInfo.getChartUrl()));
+        model.addAttribute("posted", true);
+        return "SendChart";
+    }
+
+    @PostMapping("downloadChart")
+    public String downloadChart(Model model, @ModelAttribute("download") Download download){
+        chartService.downloadImg(download.getName(), download.getChartUrl());
+        model.addAttribute("posted", true);
+        return "DownloadChart";
     }
 
 }

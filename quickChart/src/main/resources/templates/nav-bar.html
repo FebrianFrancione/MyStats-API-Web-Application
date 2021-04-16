@@ -4,8 +4,9 @@
         <ul class="navbar-nav mr-auto">
             <li class="nav-item"><a class="nav-link" th:href="@{/chart/}" >Home</a></li>
             <li class="nav-item"><a class="nav-link" th:href="@{/chart/Post}" >Create chart</a></li>
-            <li class="nav-item"><a class="nav-link" >Download chart</a></li>
-            <li class="nav-item"><a class="nav-link" >Send chart</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/chart/UploadFile}" >Create chart2</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/chart/Download}">Download chart</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/chart/Send}" >Send chart</a></li>
         </ul>
         <form class="form-inline my-2 mr-3 my-lg-0" th:action="@{/chart/Signup}" method="post">
             <input class="nav-link" value="Signup" type="hidden" />

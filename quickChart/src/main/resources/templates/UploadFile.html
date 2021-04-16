@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+</head>
+<body class="bg-light text-center">
+<div th:insert="nav-bar :: nav"></div>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="chart col-md-offset-3 col-md-4 col-sm-6 col-xs-12">
+            <h2 class="text-center">Create a chart</h2><hr>
+
+            <!-- Upload File            -->
+            <form class="form-postInfo" id="upload-form" role="form" action="#" method="post" th:action="@{/chart/upload}" th:object="${chart}" enctype="multipart/form-data">
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3">Chart title</label>
+                    <div class="col-md-8 col-sm-8 col-xs-8">
+                        <input placeholder="title" class="form-control" type="text" th:field="*{title}" required/>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Width</label>
+                    <div class="col-md-8 col-sm-8 col-xs-8">
+                        <input type="number" min="50" class="form-control" th:field="*{width}" required />
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Height</label>
+                    <div class="col-md-8 col-sm-8 col-xs-8">
+                        <input type="number" min="50" class="form-control" th:field="*{height}" required/>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Type</label>
+                    <div class="col-md-8 col-sm-8 col-xs-8">
+                        <select class="form-control" th:field="*{type}">
+                            <option value="" disabled selected>--Select--</option>
+                            <option value="bar">bar</option>
+                            <option value="line">line</option>
+                            <option value="pie">pie</option>
+                            <option value="doughnut">doughnut</option>
+                        </select><br>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Dataset Label</label>
+                    <div class="col-md-8 col-sm-8 col-xs-8">
+                        <input placeholder="label" class="form-control" type="text" th:field="*{dataSet.label}" required/>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Border Color</label>
+                    <div class="col-md-8 col-sm-8 col-xs-8">
+                        <input class="form-control" type="color" th:field="*{dataSet.border_color}" />
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Background Color</label>
+                    <div class="col-md-8 col-sm-8 col-xs-8">
+                        <input class="form-control" type="color" th:field="*{dataSet.background_color}" />
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Border Width</label>
+                    <div class="col-md-8 col-sm-8 col-xs-8">
+                        <input class="form-control" type="number" min="1" th:field="*{dataSet.borderWidth}" />
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 col-xs-3">File</label>
+                    <div class="col-md-8 col-sm-8 col-xs-8">
+                        <input type="file" name="file" class="form-control-file" />
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-6 offset-md-3 col-sm-6 col-xs-6 text-center">
+                        <button type="submit" class="btn btn-lg btn-success btn-block submit">Upload</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

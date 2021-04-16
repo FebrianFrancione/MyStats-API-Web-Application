@@ -2,11 +2,27 @@ package com.quickChart.service;
 import com.quickChart.entity.Chart;
 import com.quickChart.entity.DataSet;
 import com.quickChart.persistence.StatsDAO;
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
+import com.sendgrid.helpers.mail.objects.Personalization;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import io.quickchart.QuickChart;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -256,4 +272,100 @@ public class ChartServiceImpl implements ChartService{
 
         return backgroundColors;
     }
+
+    @Override
+    public String sendEmail(String email, String url){
+        Email from = new Email("ekdms7027@naver.com");
+        String subject = "From Chart Web Service using SendGrid API";
+        Email to = new Email(email);
+        Content content = new Content("text/plain", url);
+        Mail mail = new Mail(from, subject, to, content);
+
+        SendGrid sg = new SendGrid("");
+        Request request = new Request();
+        try {
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(mail.build());
+            Response response = sg.api(request);
+//            System.out.println(response.getStatusCode());
+//            System.out.println(response.getBody());
+//            System.out.println(response.getHeaders());
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return "Error in send grid.";
+        }
+        return "mail has been sent check your inbox.";
+    }
+
+    @Override
+    public void downloadImg(String name, String url) {
+        try(InputStream in = new URL(url).openStream()){
+            Files.copy(in, Paths.get("C:\\Users\\kiho2\\Desktop\\Concordia\\" + name +".jpg"));
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public String uploadChart(Chart chart, MultipartFile file){
+        // List<List<String>> list = new ArrayList<List<String>>();
+        BufferedReader br = null;
+        try{
+            br = new BufferedReader(new InputStreamReader(file.getInputStream()));
+            String line = "";
+
+            ArrayList<String> labels = new ArrayList<>();
+            ArrayList<Integer> labelOrder = new ArrayList<>(); // [0,2,4]
+            ArrayList<Integer> data = new ArrayList<Integer>();
+            ArrayList<Integer> dataOrder = new ArrayList<>(); // [1,3,5]
+
+            boolean flag = false;
+            while((line=br.readLine()) != null) {
+                // System.out.println(line);
+                String[] token = line.split(",");
+                if(flag){
+                    for(int i = 0; i < labelOrder.size() ; i++){
+                        labels.add(token[labelOrder.get(i)]);
+                    }
+                    for(int i = 0 ; i < dataOrder.size() ; i++){
+                        int value = Integer.parseInt(token[dataOrder.get(i)]);
+                        data.add(value);
+                    }
+                }else{
+                    for(int i = 0; i < token.length; i++){
+                        if(token[i].equalsIgnoreCase("label")){
+                            labelOrder.add(i);
+                        }else if(token[i].equalsIgnoreCase("value")){
+                            dataOrder.add(i);
+                        }
+                    }
+                    flag = true;
+                }
+
+                //List<String> tempList = new ArrayList<String>(Arrays.asList(token));
+                //list.add(tempList);
+
+            }
+            chart.setLabels(labels);
+            chart.getDataSet().setData(data);
+
+            return createChart(chart,1);
+
+        }catch(IOException e){
+            e.printStackTrace();
+            return "Error in uploading";
+        }finally {
+            try {
+                if(br != null)
+                    br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
 }
