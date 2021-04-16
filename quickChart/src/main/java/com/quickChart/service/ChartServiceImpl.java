@@ -141,6 +141,10 @@ public class ChartServiceImpl implements ChartService{
             if(!statsDao.updateBarDataset(dataSet))
                 chartUpdated = false;
 
+        if(chart.getType().compareTo("line") == 0)
+            if(!statsDao.updateLineDataset(dataSet))
+                chartUpdated = false;
+
         if(!statsDao.updateData(dataSet.getDataMap()))
             chartUpdated = false;
 
@@ -202,7 +206,12 @@ public class ChartServiceImpl implements ChartService{
         String fill = "\tfill: "+ dataSet.isFill() + ",\n";
         String pointRadius = "\tpointRadius: "+ dataSet.getPointRadius() + ",\n";
         String showLine = "\tshowLine: "+ dataSet.isShowLine() + ",\n";
-        ArrayList<Integer> data = dataSet.getData();
+        ArrayList<Integer> data;
+        if(update){
+            data = new ArrayList<>(dataSet.getDataMap().values());
+        }
+        else
+            data = dataSet.getData();
         dataSetJson.append(label).append(bgrColor).append(borderColor).append(borderWidth).append(fill)
                 .append(pointRadius).append(showLine).append("\tdata: " + data);
 

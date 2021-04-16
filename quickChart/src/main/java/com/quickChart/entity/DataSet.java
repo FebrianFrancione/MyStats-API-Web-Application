@@ -47,7 +47,7 @@ public class DataSet {
     /*
      ** Line Dataset Constructor
      */
-    public DataSet(int datasetId, String label, String border_color, String background_color, int borderWidth, boolean fill, int pointRadius, boolean showLine) {
+    public DataSet(int datasetId, String label, String border_color, String background_color, int borderWidth, boolean fill, int pointRadius, boolean showLine, Map<Integer, Integer> dataMap) {
         super();
         this.label = label;
         this.border_color = border_color;
@@ -57,6 +57,7 @@ public class DataSet {
         this.pointRadius = pointRadius;
         this.showLine = showLine;
         this.datasetId = datasetId;
+        this.dataMap = dataMap;
     }
 
     public int getDatasetId() {

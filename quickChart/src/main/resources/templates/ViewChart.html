@@ -26,6 +26,7 @@
             <h2 class="text-center">Edit your Chart</h2><hr>
 
             <div th:if="${barTemplate}" th:insert="BarChart :: bar-form"></div>
+            <div th:if="${lineTemplate}" th:insert="LineChart :: line-form"></div>
 
         </div>
     </div>
