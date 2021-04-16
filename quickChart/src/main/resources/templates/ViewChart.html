@@ -24,10 +24,9 @@
     <div class="row justify-content-center">
         <div class="chart col-md-offset-3 col-md-4 col-sm-6 col-xs-12">
             <h2 class="text-center">Edit your Chart</h2><hr>
-
             <div th:if="${barTemplate}" th:insert="BarChart :: bar-form"></div>
             <div th:if="${lineTemplate}" th:insert="LineChart :: line-form"></div>
-
+            <div th:if="${pieTemplate}" th:insert="PieChart :: pie-form"></div>
         </div>
     </div>
     <div class="row justify-content-center">

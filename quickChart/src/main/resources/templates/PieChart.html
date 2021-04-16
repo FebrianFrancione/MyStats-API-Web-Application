@@ -1,0 +1,72 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<form th:fragment="pie-form" class="form-postInfo" id="chart-form" role="form" action="#" th:method="put" th:action="@{/chart/updateChart}" th:object="${chart}">
+    <div class="form-group row">
+        <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Chart title</label>
+        <div class="col-md-8 col-sm-8 col-xs-8">
+            <input placeholder="title" class="form-control" type="text" th:value="*{title}" th:field="*{title}" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Width</label>
+        <div class="col-md-8 col-sm-8 col-xs-8">
+            <input placeholder="width" class="form-control" type="text" th:value="*{width}" th:field="*{width}"  />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Height</label>
+        <div class="col-md-8 col-sm-8 col-xs-8">
+            <input placeholder="height" class="form-control" type="text" th:value="*{height}" th:field="*{height}" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Type</label>
+        <div class="col-md-8 col-sm-8 col-xs-8">
+            <input placeholder="type" class="form-control" type="text" th:value="*{type}" th:field="*{type}" readonly />
+        </div>
+    </div>
+    <div class="labels-group form-group row" th:each="label, stat : *{labelsMap}">
+        <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Label</label>
+        <div class="col-md-8 col-sm-8 col-xs-8">
+            <input placeholder="label" class="form-control" type="text" th:field="*{labelsMap[__${label.key}__]}"/>
+        </div>
+    </div>
+    <div class="form-group row offset-md-4" id="dataset">
+        <h2><span th:text="*{type}"></span> dataset</h2>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Dataset Label</label>
+        <div class="col-md-8 col-sm-8 col-xs-8">
+            <input placeholder="label" class="form-control" type="text" th:field="*{dataSet.label}" required/>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Border Width</label>
+        <div class="col-md-8 col-sm-8 col-xs-8">
+            <input class="form-control" type="number" min="1" th:field="*{dataSet.borderWidth}" />
+        </div>
+    </div>
+    <div class="dataset-group form-group row" th:each="data, stat : *{dataSet.dataMap}">
+        <label class="col-form-label col-md-3 col-sm-3 col-xs-3"><span th:text="*{labels[__${stat.index}__]}"></span> </label>
+        <div class="col-md-8 col-sm-8 col-xs-8">
+            <input placeholder="data" class="form-control" type="text" th:field="*{dataSet.dataMap[__${data.key}__]}" required />
+        </div>
+    </div>
+    <div class="dataset-group form-group row" th:each="color, stat : *{dataSet.backgroundColorMap}">
+        <label class="col-form-label col-md-3 col-sm-3 col-xs-3"><span th:text="*{labels[__${stat.index}__]}"></span> Color</label>
+        <div class="col-md-8 col-sm-8 col-xs-8">
+            <input class="form-control" type="color" th:field="*{dataSet.backgroundColorMap[__${color.key}__]}" required />
+        </div>
+    </div>
+    <div class="form-group row">
+        <input type="hidden" th:value="*{chartId}" th:field="*{chartId}" />
+        <input type="hidden" th:value="*{dataSet.datasetId}" th:field="*{dataSet.datasetId}" />
+        <div class="col-md-6 col-sm-6 col-xs-6 offset-md-3 text-center">
+            <button type="submit" class="btn btn-lg btn-primary btn-block submit">Update</button>
+        </div>
+    </div>
+</form>
+</body>
+</html>
