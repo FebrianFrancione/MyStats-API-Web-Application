@@ -281,7 +281,7 @@ public class ChartServiceImpl implements ChartService{
         Content content = new Content("text/plain", url);
         Mail mail = new Mail(from, subject, to, content);
 
-        SendGrid sg = new SendGrid("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");
+        SendGrid sg = new SendGrid("");
         Request request = new Request();
         try {
             request.setMethod(Method.POST);
