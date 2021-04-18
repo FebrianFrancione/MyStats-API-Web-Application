@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.quickChart.service.ChartService;
 
@@ -26,7 +27,10 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+
 import com.sendgrid.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 @RequestMapping(value = "/chart", produces = {MediaType.APPLICATION_JSON_VALUE}, method = {RequestMethod.GET, RequestMethod.POST,RequestMethod.PUT, RequestMethod.DELETE})
@@ -34,6 +38,8 @@ public class ChartController implements WebMvcConfigurer {
 
     @Autowired
     private ChartService chartService;
+    private boolean uploadCSV = false;
+    private Chart uploadedChart;
 
     @Autowired
     public ChartController(ChartService chartService) {
@@ -87,14 +93,28 @@ public class ChartController implements WebMvcConfigurer {
 
     @PostMapping( "/createDataSet")
     public String createDataSet(Model model, @ModelAttribute("chart") Chart chart) throws IOException {
+        if(uploadCSV){
+            chart = uploadedChart;
+        }
+
         String template = chartService.getDataSetTemplate(chart.getType());
 
         if(chart.getType().compareTo("pie") == 0 || chart.getType().compareTo("doughnut")== 0){
-            DataSet dataSet = new DataSet();
-            dataSet.setBackgroundColors(chartService.generateColors(chart.getLabels().size()));
-            chart.setDataSet(dataSet);
+            if(uploadCSV)
+                chart.getDataSet().setBackgroundColors(chartService.generateColors(chart.getLabels().size()));
+
+            else{
+                DataSet dataSet = new DataSet();
+                dataSet.setBackgroundColors(chartService.generateColors(chart.getLabels().size()));
+                chart.setDataSet(dataSet);
+            }
+
         }
 
+        if(uploadCSV){
+            uploadCSV = false;
+            model.addAttribute("uploadCSV", true);
+        }
         model.addAttribute("chart", chart);
         model.addAttribute("createDataset", true);
         return template;
@@ -140,11 +160,11 @@ public class ChartController implements WebMvcConfigurer {
     }
 
     @PostMapping("/upload")
-    public String uploadFile(Model model, @ModelAttribute("chart") Chart chart, @RequestParam("file") MultipartFile file){
-        String charturl = chartService.uploadChart(chart, file);
-        model.addAttribute("posted", true);
-        model.addAttribute("chart", chart);
-        return "Chart";
+    public RedirectView uploadFile(Model model, @ModelAttribute("chart") Chart chart, @RequestParam("file") MultipartFile file){
+        Chart newChart = chartService.uploadCSV(chart, file);
+        uploadCSV = true;
+        uploadedChart = newChart;
+        return new RedirectView("/chart/createDataSet");
     }
 
     @PostMapping("/sendGrid")

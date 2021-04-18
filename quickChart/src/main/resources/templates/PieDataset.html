@@ -68,7 +68,10 @@
                 </div>
                 <div class="dataset-group form-group row" th:each="label, stat : *{labels}">
                     <label class="col-form-label col-md-3 col-sm-3 col-xs-3"><span th:text="${label}"></span></label>
-                    <div class="col-md-8 col-sm-8 col-xs-8">
+                    <div th:if="${uploadCSV}" class="col-md-8 col-sm-8 col-xs-8">
+                        <input class="form-control" type="text" th:field="*{dataSet.data[__${stat.index}__]}"/>
+                    </div>
+                    <div th:unless="${uploadCSV}" class="col-md-8 col-sm-8 col-xs-8">
                         <input placeholder="data" class="form-control" type="text" th:field="*{dataSet.data}" required />
                     </div>
                     <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Color</label>
