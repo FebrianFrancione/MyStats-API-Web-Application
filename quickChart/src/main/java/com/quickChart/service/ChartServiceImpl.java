@@ -341,8 +341,7 @@ public class ChartServiceImpl implements ChartService{
     }
 
     @Override
-    public String uploadChart(Chart chart, MultipartFile file){
-        // List<List<String>> list = new ArrayList<List<String>>();
+    public Chart uploadCSV(Chart chart, MultipartFile file){
         BufferedReader br = null;
         try{
             br = new BufferedReader(new InputStreamReader(file.getInputStream()));
@@ -350,7 +349,7 @@ public class ChartServiceImpl implements ChartService{
 
             ArrayList<String> labels = new ArrayList<>();
             ArrayList<Integer> labelOrder = new ArrayList<>(); // [0,2,4]
-            ArrayList<Integer> data = new ArrayList<Integer>();
+            ArrayList<Integer> data = new ArrayList<>();
             ArrayList<Integer> dataOrder = new ArrayList<>(); // [1,3,5]
 
             boolean flag = false;
@@ -381,13 +380,14 @@ public class ChartServiceImpl implements ChartService{
 
             }
             chart.setLabels(labels);
-            chart.getDataSet().setData(data);
-
-            return createChart(chart,1);
+            DataSet dataset = new DataSet();
+            dataset.setData(data);
+            chart.setDataSet(dataset);
+            return chart;
 
         }catch(IOException e){
             e.printStackTrace();
-            return "Error in uploading";
+            return null;
         }finally {
             try {
                 if(br != null)

@@ -16,5 +16,5 @@ public interface ChartService {
     public ArrayList<String> generateColors(int length);
     public String sendEmail(String email, String url);
     public void downloadImg(String name, String url);
-    public String uploadChart(Chart chart, MultipartFile file);
+    public Chart uploadCSV(Chart chart, MultipartFile file);
 }

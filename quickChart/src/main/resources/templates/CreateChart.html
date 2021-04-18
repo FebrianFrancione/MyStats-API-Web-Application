@@ -17,7 +17,7 @@
         <div class="chart col-md-offset-3 col-md-4 col-sm-6 col-xs-12">
             <h2 class="text-center">Create a chart</h2><hr>
 
-            <form class="form-postInfo" id="chart-form" role="form" action="#" method="post" th:action="@{/chart/createDataSet}" th:object="${chart}">
+            <form class="form-postInfo" id="chart-form" role="form" action="#" method="post" th:action="@{/chart/createDataSet}" th:object="${chart}" enctype="multipart/form-data">
                 <div class="form-group row">
                     <label class="col-form-label col-md-3 col-sm-3">Chart title</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
