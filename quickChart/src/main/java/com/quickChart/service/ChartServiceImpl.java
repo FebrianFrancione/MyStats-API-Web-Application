@@ -353,9 +353,9 @@ public class ChartServiceImpl implements ChartService{
             ArrayList<Integer> data = new ArrayList<>();
             ArrayList<Integer> dataOrder = new ArrayList<>(); // [1,3,5]
 
+            int numOfLine = 0;
             boolean flag = false;
             while((line=br.readLine()) != null) {
-                // System.out.println(line);
                 String[] token = line.split(",");
                 if(flag){
                     for(int i = 0; i < labelOrder.size() ; i++){
@@ -375,11 +375,20 @@ public class ChartServiceImpl implements ChartService{
                     }
                     flag = true;
                 }
+                ++numOfLine;
 
-                //List<String> tempList = new ArrayList<String>(Arrays.asList(token));
-                //list.add(tempList);
+                // format should have only 2 lines.
+                if(numOfLine == 2){
+                    break;
+                }
 
             }
+
+            // Number of labels and values should be same.
+            if(labelOrder.size() != dataOrder.size()){
+                return null;
+            }
+
             chart.setLabels(labels);
             DataSet dataset = new DataSet();
             dataset.setData(data);

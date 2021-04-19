@@ -40,6 +40,7 @@ public class ChartController implements WebMvcConfigurer {
     private ChartService chartService;
     private boolean uploadCSV = false;
     private Chart uploadedChart;
+    private boolean formatCSV = true;
 
     @Autowired
     public ChartController(ChartService chartService) {
@@ -91,6 +92,14 @@ public class ChartController implements WebMvcConfigurer {
     @GetMapping("/UploadFile")
     public String uploadLink(Model model){
         model.addAttribute("chart", new Chart());
+
+        if(!formatCSV){
+            model.addAttribute("formatValidate", true);
+            formatCSV = true;
+        }else{
+            model.addAttribute("formatValidate", false);
+        }
+
         return "UploadFile";
     }
 
@@ -167,7 +176,13 @@ public class ChartController implements WebMvcConfigurer {
         Chart newChart = chartService.uploadCSV(chart, file);
         uploadCSV = true;
         uploadedChart = newChart;
-        return new RedirectView("/chart/createDataSet");
+
+        if(newChart == null){
+            formatCSV = false;
+            return new RedirectView("/chart/UploadFile");
+        }else{
+            return new RedirectView("/chart/createDataSet");
+        }
     }
 
     @PostMapping("/sendGrid")
@@ -186,7 +201,7 @@ public class ChartController implements WebMvcConfigurer {
         if(success){
             model.addAttribute("posted", true);
         }else{
-            model.addAttribute("false", true);
+            model.addAttribute("downloadFail", true);
         }
 
         model.addAttribute(template, true);
