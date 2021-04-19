@@ -82,11 +82,11 @@ public class ChartController implements WebMvcConfigurer {
         return "SendChart";
     }
 
-    @GetMapping("/Download")
-    public String download(Model model){
-        model.addAttribute("download", new Download());
-        return "DownloadChart";
-    }
+//    @GetMapping("/Download")
+//    public String download(Model model){
+//        model.addAttribute("download", new Download());
+//        return "DownloadChart";
+//    }
 
     @GetMapping("/UploadFile")
     public String uploadLink(Model model){
@@ -180,8 +180,10 @@ public class ChartController implements WebMvcConfigurer {
     @PostMapping("/downloadChart")
     public String downloadChart(Model model, @RequestParam int chartId){
         Chart chart = chartService.getChart(chartId);
-        chartService.downloadImg(chart.getChartUrl());
+        chartService.downloadImg(chart.getChartUrl(), chart.getTitle());
         String template = getChartTemplate(chart.getType());
+
+        model.addAttribute("posted", true);
         model.addAttribute(template, true);
         model.addAttribute("chart", chart);
         return "ViewChart";
