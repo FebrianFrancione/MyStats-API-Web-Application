@@ -22,6 +22,7 @@ import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -331,13 +332,13 @@ public class ChartServiceImpl implements ChartService{
     }
 
     @Override
-    public void downloadImg(String url, String title) {
+    public boolean downloadImg(String url, String title) {
         try(InputStream in = new URL(url).openStream()){
-            Files.copy(in, Paths.get(System.getProperty("java.io.tmpdir") + "\\" + title + ".jpg"));
+            Files.copy(in, Paths.get(System.getProperty("java.io.tmpdir") + "\\" + title + ".jpg"), StandardCopyOption.REPLACE_EXISTING);
+            return true;
         }catch(IOException e){
-            e.printStackTrace();
+            return false;
         }
-
     }
 
     @Override
