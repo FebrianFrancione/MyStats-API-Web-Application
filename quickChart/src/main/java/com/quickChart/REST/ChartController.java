@@ -74,8 +74,11 @@ public class ChartController implements WebMvcConfigurer {
     }
 
     @GetMapping("/Send")
-    public String sendLink(Model model){
-        model.addAttribute("email", new EmailInfo());
+    public String sendLink(Model model, @RequestParam int chartId){
+        Chart chart = chartService.getChart(chartId);
+        EmailInfo emailInfo = new EmailInfo();
+        emailInfo.setChartUrl(chart.getChartUrl());
+        model.addAttribute("email", emailInfo);
         return "SendChart";
     }
 
@@ -174,9 +177,10 @@ public class ChartController implements WebMvcConfigurer {
         return "SendChart";
     }
 
-    @PostMapping("downloadChart")
-    public String downloadChart(Model model, @ModelAttribute("download") Download download){
-        chartService.downloadImg(download.getName(), download.getChartUrl());
+    @PostMapping("/downloadChart")
+    public String downloadChart(Model model, @RequestParam int chartId){
+        Chart chart = chartService.getChart(chartId);
+        chartService.downloadImg(chart.getTitle(), chart.getChartUrl());
         model.addAttribute("posted", true);
         return "DownloadChart";
     }
