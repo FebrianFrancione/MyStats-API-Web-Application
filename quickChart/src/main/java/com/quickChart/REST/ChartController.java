@@ -180,9 +180,11 @@ public class ChartController implements WebMvcConfigurer {
     @PostMapping("/downloadChart")
     public String downloadChart(Model model, @RequestParam int chartId){
         Chart chart = chartService.getChart(chartId);
-        chartService.downloadImg(chart.getTitle(), chart.getChartUrl());
-        model.addAttribute("posted", true);
-        return "DownloadChart";
+        chartService.downloadImg(chart.getChartUrl());
+        String template = getChartTemplate(chart.getType());
+        model.addAttribute(template, true);
+        model.addAttribute("chart", chart);
+        return "ViewChart";
     }
 
 }

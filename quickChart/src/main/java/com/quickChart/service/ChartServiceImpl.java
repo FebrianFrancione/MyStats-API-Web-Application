@@ -331,9 +331,9 @@ public class ChartServiceImpl implements ChartService{
     }
 
     @Override
-    public void downloadImg(String name, String url) {
+    public void downloadImg(String url) {
         try(InputStream in = new URL(url).openStream()){
-            Files.copy(in, Paths.get("C:\\Users\\kiho2\\Desktop\\Concordia\\" + name +".jpg"));
+            Files.copy(in, Paths.get("C:\\Users\\kiho2\\Desktop\\Concordia\\img1.jpg"));
         }catch(IOException e){
             e.printStackTrace();
         }
