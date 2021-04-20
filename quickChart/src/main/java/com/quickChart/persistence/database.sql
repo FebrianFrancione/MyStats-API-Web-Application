@@ -28,7 +28,9 @@ CREATE TABLE `background_colors` (
                                      `color_id` int NOT NULL AUTO_INCREMENT,
                                      `color` varchar(45) DEFAULT NULL,
                                      `dataset_id` int DEFAULT NULL,
-                                     PRIMARY KEY (`color_id`)
+                                     PRIMARY KEY (`color_id`),
+                                     KEY `dataset_background_color_FK_idx` (`dataset_id`),
+                                     CONSTRAINT `dataset_background_color_FK` FOREIGN KEY (`dataset_id`) REFERENCES `datasets` (`dataset_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -63,7 +65,9 @@ CREATE TABLE `dataset_data` (
                                 `value_id` int NOT NULL AUTO_INCREMENT,
                                 `value` int DEFAULT NULL,
                                 `dataset_id` int DEFAULT NULL,
-                                PRIMARY KEY (`value_id`)
+                                PRIMARY KEY (`value_id`),
+                                KEY `dataset_data_FK_idx` (`dataset_id`),
+                                CONSTRAINT `dataset_data_FK` FOREIGN KEY (`dataset_id`) REFERENCES `datasets` (`dataset_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -85,7 +89,9 @@ CREATE TABLE `datasets` (
                             `fill` varchar(45) DEFAULT NULL,
                             `pointRadius` int DEFAULT NULL,
                             `showLine` varchar(45) DEFAULT NULL,
-                            PRIMARY KEY (`dataset_id`)
+                            PRIMARY KEY (`dataset_id`),
+                            KEY `dataset_chart_id_FK_idx` (`chart_id`),
+                            CONSTRAINT `chart_dataset_FK` FOREIGN KEY (`chart_id`) REFERENCES `charts` (`chart_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -100,7 +106,9 @@ CREATE TABLE `labels` (
                           `label_id` int NOT NULL AUTO_INCREMENT,
                           `title` varchar(45) DEFAULT NULL,
                           `chart_id` int DEFAULT NULL,
-                          PRIMARY KEY (`label_id`)
+                          PRIMARY KEY (`label_id`),
+                          KEY `chart_id_FK_idx` (`chart_id`),
+                          CONSTRAINT `chart_labels_FK` FOREIGN KEY (`chart_id`) REFERENCES `charts` (`chart_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

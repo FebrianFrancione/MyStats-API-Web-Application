@@ -286,6 +286,34 @@ Updates chart and dataset in the database and generates a new QuickChart URL for
 * Error Response:
   * Status Code: 302
   * Content : Redirect to login if unauthorized access
+
+
+### Delete Chart
+
+Deletes the chart from the Database and returns to home page without the deleted chart in the table
+
+* Request URL: `/deleteChart`
+
+* Method:  `DELETE`
+
+* URL Params:
+
+  Required:
+
+  chartId=[integer]
+
+* Data Params: None
+
+* Success Response:
+  * Status Code: 200
+  * Content : HTML code without the chart deleted. A success message will display if deleted
+
+    ![Delete Chart](documentation/delete-chart.PNG)
+
+* Error Response:
+  * Status Code: 302
+  * Content : Redirect to login if unauthorized access
+  
   
 ## License 
 This project is licensed under the GNU General Public License v3.0 - see the [LICENSE.md](LICENSE) file for details
