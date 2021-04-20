@@ -40,6 +40,7 @@ public class ChartController implements WebMvcConfigurer {
     private ChartService chartService;
     private boolean uploadCSV = false;
     private Chart uploadedChart;
+    private boolean formatCSV = true;
 
     @Autowired
     public ChartController(ChartService chartService) {
@@ -82,15 +83,23 @@ public class ChartController implements WebMvcConfigurer {
         return "SendChart";
     }
 
-    @GetMapping("/Download")
-    public String download(Model model){
-        model.addAttribute("download", new Download());
-        return "DownloadChart";
-    }
+//    @GetMapping("/Download")
+//    public String download(Model model){
+//        model.addAttribute("download", new Download());
+//        return "DownloadChart";
+//    }
 
     @GetMapping("/UploadFile")
     public String uploadLink(Model model){
         model.addAttribute("chart", new Chart());
+
+        if(!formatCSV){
+            model.addAttribute("formatValidate", true);
+            formatCSV = true;
+        }else{
+            model.addAttribute("formatValidate", false);
+        }
+
         return "UploadFile";
     }
 
@@ -167,7 +176,13 @@ public class ChartController implements WebMvcConfigurer {
         Chart newChart = chartService.uploadCSV(chart, file);
         uploadCSV = true;
         uploadedChart = newChart;
-        return new RedirectView("/chart/createDataSet");
+
+        if(newChart == null){
+            formatCSV = false;
+            return new RedirectView("/chart/UploadFile");
+        }else{
+            return new RedirectView("/chart/createDataSet");
+        }
     }
 
     @PostMapping("/sendGrid")
@@ -180,8 +195,15 @@ public class ChartController implements WebMvcConfigurer {
     @PostMapping("/downloadChart")
     public String downloadChart(Model model, @RequestParam int chartId){
         Chart chart = chartService.getChart(chartId);
-        chartService.downloadImg(chart.getChartUrl());
+        boolean success = chartService.downloadImg(chart.getChartUrl(), chart.getTitle());
         String template = getChartTemplate(chart.getType());
+
+        if(success){
+            model.addAttribute("posted", true);
+        }else{
+            model.addAttribute("downloadFail", true);
+        }
+
         model.addAttribute(template, true);
         model.addAttribute("chart", chart);
         return "ViewChart";

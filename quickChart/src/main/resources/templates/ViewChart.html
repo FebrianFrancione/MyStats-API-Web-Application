@@ -21,6 +21,14 @@
             </div>
         </div>
     </div>
+    <div class="alert alert-info alert-dismissible fade show" th:if = "${posted}">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <p><strong>Success!</strong> Chart Is Downloaded!</p>
+    </div>
+    <div class="alert alert-danger alert-dismissible fade show" th:if = "${downloadFail}">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <p><strong>Fail!</strong> Fail to download a chart!</p>
+    </div>
     <div class="row justify-content-center">
         <div class="chart col-md-offset-3 col-md-4 col-sm-6 col-xs-12">
             <h2 class="text-center">Edit your Chart</h2><hr>

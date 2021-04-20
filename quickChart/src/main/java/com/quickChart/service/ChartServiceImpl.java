@@ -22,6 +22,7 @@ import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -331,13 +332,13 @@ public class ChartServiceImpl implements ChartService{
     }
 
     @Override
-    public void downloadImg(String url) {
+    public boolean downloadImg(String url, String title) {
         try(InputStream in = new URL(url).openStream()){
-            Files.copy(in, Paths.get("C:\\Users\\kiho2\\Desktop\\Concordia\\img1.jpg"));
+            Files.copy(in, Paths.get(System.getProperty("java.io.tmpdir") + "\\" + title + ".jpg"), StandardCopyOption.REPLACE_EXISTING);
+            return true;
         }catch(IOException e){
-            e.printStackTrace();
+            return false;
         }
-
     }
 
     @Override
@@ -352,9 +353,9 @@ public class ChartServiceImpl implements ChartService{
             ArrayList<Integer> data = new ArrayList<>();
             ArrayList<Integer> dataOrder = new ArrayList<>(); // [1,3,5]
 
+            int numOfLine = 0;
             boolean flag = false;
             while((line=br.readLine()) != null) {
-                // System.out.println(line);
                 String[] token = line.split(",");
                 if(flag){
                     for(int i = 0; i < labelOrder.size() ; i++){
@@ -374,11 +375,20 @@ public class ChartServiceImpl implements ChartService{
                     }
                     flag = true;
                 }
+                ++numOfLine;
 
-                //List<String> tempList = new ArrayList<String>(Arrays.asList(token));
-                //list.add(tempList);
+                // format should have only 2 lines.
+                if(numOfLine == 2){
+                    break;
+                }
 
             }
+
+            // Number of labels and values should be same.
+            if(labelOrder.size() != dataOrder.size()){
+                return null;
+            }
+
             chart.setLabels(labels);
             DataSet dataset = new DataSet();
             dataset.setData(data);
