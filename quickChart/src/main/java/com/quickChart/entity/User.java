@@ -11,6 +11,8 @@ public class User {
     // getters and setters are not shown for brevity
 
 
+    public User() {}
+
     public User(int user_id, String first_name, String last_name, String password, String token) {
         this.user_id = user_id;
         this.first_name = first_name;
@@ -18,6 +20,7 @@ public class User {
         this.password = password;
         this.token = token;
     }
+
 
     @Override
     public String toString() {

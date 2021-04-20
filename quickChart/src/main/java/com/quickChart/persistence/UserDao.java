@@ -10,6 +10,23 @@ public class UserDao {
     private PreparedStatement statement = null;
     private JDBConfig jdbc = new JDBConfig();
 
+    public void createUser(User user) {
+        String sql = "insert into stats_db (first_name, last_name, password) values (?,?,?)";
+        JDBConfig jdbc = new JDBConfig();
+        statement = jdbc.prepareStatement(sql);
+        try {
+            statement.setString(1,user.getFirst_name());
+            statement.setString(2, user.getLast_name());
+            statement.setString(3, user.getPassword());
+            statement.executeQuery();
+        }catch (SQLException e){
+            e.printStackTrace();}
+        finally {
+            jdbc.close();
+        }
+
+    }
+
     public User getUserByFirstName(String first_name) {
         User user = null;
         int user_id;

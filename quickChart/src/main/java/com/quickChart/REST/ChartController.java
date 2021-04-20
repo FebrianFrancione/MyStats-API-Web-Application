@@ -1,9 +1,6 @@
 package com.quickChart.REST;
 
-import com.quickChart.entity.Chart;
-import com.quickChart.entity.DataSet;
-import com.quickChart.entity.Download;
-import com.quickChart.entity.EmailInfo;
+import com.quickChart.entity.*;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
@@ -55,8 +52,15 @@ public class ChartController implements WebMvcConfigurer {
     }
 
     @GetMapping( "/Signup")
-    public String showSignupPage() {
+    public String showSignupPage(Model model) {
+        model.addAttribute("user", new User());
         return "Signup";
+    }
+
+    @PostMapping( "/createUser")
+    public String showSignupPage(Model model, @ModelAttribute("album") User user) {
+        chartService.createUser(user);
+        return "Home";
     }
 
     @GetMapping("/viewChart")

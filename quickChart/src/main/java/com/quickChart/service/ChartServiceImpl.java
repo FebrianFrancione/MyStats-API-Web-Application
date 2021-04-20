@@ -1,7 +1,10 @@
 package com.quickChart.service;
 import com.quickChart.entity.Chart;
 import com.quickChart.entity.DataSet;
+import com.quickChart.entity.User;
+import com.quickChart.persistence.JDBConfig;
 import com.quickChart.persistence.StatsDAO;
+import com.quickChart.persistence.UserDao;
 import com.sendgrid.Method;
 import com.sendgrid.Request;
 import com.sendgrid.Response;
@@ -30,8 +33,14 @@ import java.util.stream.Collectors;
 @Service
 public class ChartServiceImpl implements ChartService{
 
+    UserDao userDao = new UserDao();
     StatsDAO statsDao = new StatsDAO();
     private boolean update = false;
+
+    @Override
+    public void createUser(User user) {
+        userDao.createUser(user);
+    }
 
     @Override
     public Chart getChart(int chartId){
@@ -415,6 +424,8 @@ public class ChartServiceImpl implements ChartService{
             }
         }
     }
+
+
 
 
 }

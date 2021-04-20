@@ -1,6 +1,7 @@
 package com.quickChart.service;
 
 import com.quickChart.entity.Chart;
+import com.quickChart.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -18,4 +19,5 @@ public interface ChartService {
     public String sendEmail(String email, String url, String msg);
     public boolean downloadImg(String url, String title);
     public Chart uploadCSV(Chart chart, MultipartFile file);
+    void createUser(User user);
 }
