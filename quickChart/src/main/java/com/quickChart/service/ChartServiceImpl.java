@@ -328,30 +328,16 @@ public class ChartServiceImpl implements ChartService{
         Email from = new Email("ekdms7027@naver.com");
         String subject = "From Chart Web Service using SendGrid API";
         Email to = new Email(email);
-        Content content = new Content("text/plain", msg);
+        Content content = new Content("text/html", "<p>"+msg+"</p>"+"<br/>"+"<img src=\""+url+"\" />");
         Mail mail = new Mail(from, subject, to, content);
 
         SendGrid sg = new SendGrid("");
         Request request = new Request();
         try {
-//            Attachments attachments = new Attachments();
-//            File file = new File(url);
-//            byte[] fileContent = Files.readAllBytes(file.toPath());
-//            String encodedString = Base64.getEncoder().encodeToString(fileContent);
-//            attachments.setContent(encodedString);
-//            attachments.setDisposition("attachment");
-//            attachments.setFilename("screenshot5.png");
-//            attachments.setType("image/png");
-//
-//            mail.addAttachments(attachments);
-
             request.setMethod(Method.POST);
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
             Response response = sg.api(request);
-//            System.out.println(response.getStatusCode());
-//            System.out.println(response.getBody());
-//            System.out.println(response.getHeaders());
 
         } catch (IOException ex) {
             ex.printStackTrace();
