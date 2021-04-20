@@ -68,8 +68,8 @@ public class ChartController implements WebMvcConfigurer {
         return "ViewChart";
     }
 
-    @GetMapping("/Post")
-    public String showPost(Model model){
+    @GetMapping("/PostForm")
+    public String postForm(Model model){
         model.addAttribute("chart", new Chart());
         return "CreateChart";
     }

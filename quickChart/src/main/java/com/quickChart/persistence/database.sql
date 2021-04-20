@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `stats_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `stats_db`;
 -- MySQL dump 10.13  Distrib 8.0.22, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: stats_db
@@ -30,7 +32,6 @@ CREATE TABLE `background_colors` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-
 --
 -- Table structure for table `charts`
 --
@@ -48,7 +49,7 @@ CREATE TABLE `charts` (
                           `backgroundColor` varchar(45) DEFAULT NULL,
                           `user_id` int DEFAULT NULL,
                           PRIMARY KEY (`chart_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -63,7 +64,7 @@ CREATE TABLE `dataset_data` (
                                 `value` int DEFAULT NULL,
                                 `dataset_id` int DEFAULT NULL,
                                 PRIMARY KEY (`value_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -85,7 +86,7 @@ CREATE TABLE `datasets` (
                             `pointRadius` int DEFAULT NULL,
                             `showLine` varchar(45) DEFAULT NULL,
                             PRIMARY KEY (`dataset_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -100,7 +101,7 @@ CREATE TABLE `labels` (
                           `title` varchar(45) DEFAULT NULL,
                           `chart_id` int DEFAULT NULL,
                           PRIMARY KEY (`label_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -117,8 +118,19 @@ CREATE TABLE `users` (
                          `password` varchar(110) DEFAULT NULL,
                          `token` varchar(45) DEFAULT NULL,
                          PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'feb','fran','$2a$10$V/jCrwE4DNuciL9CS8uue.kH5Dls6aKWOH1Wu7f./hYmPeE53SrWm','1234');
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -129,4 +141,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-08 14:39:25
+-- Dump completed on 2021-04-19 16:52:02
