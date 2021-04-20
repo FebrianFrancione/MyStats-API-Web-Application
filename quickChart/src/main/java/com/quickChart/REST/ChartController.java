@@ -1,6 +1,9 @@
 package com.quickChart.REST;
 
 import com.quickChart.entity.*;
+import com.quickChart.persistence.UserDao;
+import com.quickChart.service.MyUserDetails;
+import com.quickChart.service.UserDetailsServiceImpl;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
@@ -9,6 +12,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +52,11 @@ public class ChartController implements WebMvcConfigurer {
 
     @GetMapping( "/")
     public String showHomePage(Model model) {
-        List<Chart> charts = chartService.getCharts(1);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("username", auth.getName());
+        UserDao userDao = new UserDao();
+        User user = userDao.getUserByFirstName(auth.getName());
+        List<Chart> charts = chartService.getCharts(user.getUser_id());
         model.addAttribute(charts);
         return "Home";
     }

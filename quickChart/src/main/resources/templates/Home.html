@@ -10,7 +10,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
-<body class="bg-light text-center">
+<body class="bg-light text-center" th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">
 <div th:insert="nav-bar :: nav"></div>
 <div class="container-fluid">
     <div class="row justify-content-center">
@@ -27,6 +27,8 @@
             <div class="row">
                 <div class="col pb-2 mt-4 mb-2 border-bottom">
                     <h2>Welcome to Chart Repository Service</h2>
+<!--                    <h2><span sec:authentication="name">Username</span></h2>-->
+                    <h2><a th:text="${username}"></a></h2>
                 </div>
             </div>
             <div class="row">
