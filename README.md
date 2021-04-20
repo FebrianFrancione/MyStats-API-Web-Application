@@ -129,7 +129,7 @@ Receives chart entity with pre-populated chart fields and redirects to a dynamic
 * Success Response:
   * Status Code: 200
   * Content : HTML code with a form and input fields of a chart Entity and Dataset fields
-    ![Post Chart](documentation/Create-dataset.PNG)
+    ![Create DataSet](documentation/Create-dataset.PNG)
 
 * Error Response:
   * Status Code: 302
@@ -170,7 +170,7 @@ It routes to the view Chart with the chart entity object
 * Success Response:
   * Status Code: 200
   * Content : HTML code with the chart image and url from QuickChart API
-    ![Post Chart](documentation/Chart.PNG)
+    ![Chart](documentation/Chart.PNG)
 
 * Error Response:
   * Status Code: 302
@@ -202,7 +202,7 @@ The difference is that here all the labels and data will be uploaded directly fr
 
 * Success Response:
   * Content : redirects to `/createDataSet` which will populate the Dataset labels and data dynamically from CSV and return HTML form
-    ![Post Chart](documentation/Upload-form.PNG)
+    ![Upload Form](documentation/Upload-form.PNG)
 
 * Error Response:
   * Status Code: 302
@@ -215,7 +215,77 @@ The difference is that here all the labels and data will be uploaded directly fr
     * 1 row with one or more columns corresponding to the header *{[ label, value]}
     * the number of columns must match the number of headers
     * a sample csv file can be found in the documentation folder [CSV file](documentation/upload-data-csv.csv)
-  
 
+
+### View Chart
+
+Gets the chart entity and populates the model attribute with the chart object. It returns a view with the Chart and Dataset fields populated from the Database.
+
+The form has the options to update the chart, download or send by email.
+
+* Request URL: `/viewChart`
+
+* Method:  `GET`
+
+* URL Params:
+  
+  Required:
+  
+  chartId=[integer]
+
+* Data Params: None
+
+* Success Response:
+  * Status Code: 200
+  * Content : HTML code with the chart and dataset information and options to update, download and send.
+    
+    ![Edit Chart](documentation/Edit-chart.PNG)
+    ![Edit Chart](documentation/View-chart-options.PNG)
+
+* Error Response:
+  * Status Code: 302
+  * Content : Redirect to login if unauthorized access
+
+
+### Update Chart
+
+Updates chart and dataset in the database and generates a new QuickChart URL for the image
+
+* Request URL: `/updateChart`
+
+* Method:  `PUT`
+
+* URL Params: None
+
+* Data Params: Chart entity with DataSet entity:
+  ```json
+  {
+      "chartId" : 1,
+      "title" : "title",
+      "width" : 600,
+      "height" : 400,
+      "type" : "bar",
+      "labelsMap" : { "1" : "label1", "2" : "label2", "3" : "label3" }, 
+      "dataSet" : {
+        "datasetId" : 1,
+        "label" : "dataset",
+        "border_color" : "#F28E2B",
+        "background_color" : "#FFEAD6",
+        "borderWidth" : 2,
+        "dataMap" : { "1" : 56, "2" : 110, "3" : 80 }
+      }
+  }
+  ```
+
+* Success Response:
+  * Status Code: 200
+  * Content : HTML with the updated chart, dataset and the success message.
+
+    ![Updated Chart](documentation/updated-chart.PNG)
+
+* Error Response:
+  * Status Code: 302
+  * Content : Redirect to login if unauthorized access
+  
 ## License 
 This project is licensed under the GNU General Public License v3.0 - see the [LICENSE.md](LICENSE) file for details
