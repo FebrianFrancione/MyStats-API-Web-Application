@@ -176,6 +176,11 @@ public class ChartServiceImpl implements ChartService{
         return chartUpdated;
     }
 
+    @Override
+    public boolean deleteChart(int chartId){
+        return statsDao.deleteChart(chartId);
+    }
+
     public String setLabels(ArrayList<String> labelsList){
         StringBuilder labels = new StringBuilder();
         labels.append(" labels: [");

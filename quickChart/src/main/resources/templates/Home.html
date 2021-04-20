@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </head>
 <body class="bg-light text-center">
 <div th:insert="nav-bar :: nav"></div>
@@ -15,6 +16,14 @@
     <div class="row justify-content-center">
         <div class="col">
 
+            <div class="row" th:if="${deleted}">
+                <div class="col">
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <p>Chart deleted</p>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col pb-2 mt-4 mb-2 border-bottom">
                     <h2>Welcome to Chart Repository Service</h2>
@@ -37,12 +46,13 @@
                 <table class="table table-borderless table-striped table-hover" >
                     <thead class="thead-dark">
                     <tr>
-                        <th >Id</th>
-                        <th >Title</th>
-                        <th >URL</th>
-                        <th >Type</th>
-                        <th >Width</th>
-                        <th >Height</th>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>URL</th>
+                        <th>Type</th>
+                        <th>Width</th>
+                        <th>Height</th>
+                        <th>Delete</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -53,6 +63,7 @@
                         <td th:text="${chart.getType()}"/>
                         <td th:text="${chart.getWidth()}"/>
                         <td th:text="${chart.getHeight()}"/>
+                        <td><a class="btn btn-danger btn-sm" th:href="@{/chart/deleteChart(chartId=${chart.getChartId()})}"><i class="far fa-trash-alt">&nbsp;&nbsp;Delete</i></a></td>
                     </tr>
                     </tbody>
                 </table>

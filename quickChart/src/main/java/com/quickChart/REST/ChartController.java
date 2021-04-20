@@ -157,6 +157,17 @@ public class ChartController implements WebMvcConfigurer {
         return "ViewChart";
     }
 
+    @DeleteMapping( "/deleteChart")
+    public String deleteChart(Model model, @RequestParam int chartId) {
+        boolean deleted = chartService.deleteChart(chartId);
+        if(deleted)
+            model.addAttribute("deleted", true);
+
+        List<Chart> charts = chartService.getCharts(1);
+        model.addAttribute(charts);
+        return "Home";
+    }
+
     private String getChartTemplate(String type){
         String template = "";
 

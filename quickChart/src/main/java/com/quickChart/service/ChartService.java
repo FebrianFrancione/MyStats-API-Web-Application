@@ -19,5 +19,6 @@ public interface ChartService {
     public String sendEmail(String email, String url, String msg);
     public boolean downloadImg(String url, String title);
     public Chart uploadCSV(Chart chart, MultipartFile file);
+    public boolean deleteChart(int chartId);
     void createUser(User user);
 }

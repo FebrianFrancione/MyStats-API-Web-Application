@@ -500,4 +500,23 @@ public class StatsDAO {
         }
         return newID;
     }
+
+    public boolean deleteChart(int chartId){
+        boolean isDeleted = false;
+        String sql = "delete from charts where chart_id=?";
+        statement = jdbc.prepareStatement(sql);
+        try {
+            statement.setInt(1, chartId);
+            int deletedRow = statement.executeUpdate();
+            if(deletedRow == 1)
+                isDeleted = true;
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally {
+            jdbc.close();
+        }
+
+        return isDeleted;
+    }
+
 }
