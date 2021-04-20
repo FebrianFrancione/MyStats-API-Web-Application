@@ -65,28 +65,8 @@ public class ChartServiceImpl implements ChartService{
         String labels = setLabels(chart.getLabels());
         DataSet dataSet = chart.getDataSet();
         String dataSets = setDataset(chart.getType(), dataSet);
+        String chartUrl = getQuickChart(chart, labels, dataSets);
 
-        QuickChart Quickchart = new QuickChart();
-        Quickchart.setWidth(chart.getWidth());
-        Quickchart.setHeight(chart.getHeight());
-        Quickchart.setConfig("{"
-                + "    type: '"+ chart.getType() +"',"
-                + "    data: {"
-                +          labels
-                + "        datasets: ["
-                +               dataSets
-                + "        ]"
-                + "    },"
-                + "    options: {"
-                + "        title: {"
-                + "            display: true,"
-                + "            text: '"+ chart.getTitle() +"'"
-                + "        }"
-                + "    }"
-                + "}"
-        );
-
-        String chartUrl = Quickchart.getShortUrl();
         int chartId = statsDao.addChart(chart, chartUrl, userId);
 
         if(chartId >= 1) {
@@ -123,28 +103,8 @@ public class ChartServiceImpl implements ChartService{
         String labels = setLabelsMap(chart.getLabelsMap());
         DataSet dataSet = chart.getDataSet();
         String dataSets = setDataset(chart.getType(), dataSet);
+        String chartUrl = getQuickChart(chart, labels, dataSets);
 
-        QuickChart Quickchart = new QuickChart();
-        Quickchart.setWidth(chart.getWidth());
-        Quickchart.setHeight(chart.getHeight());
-        Quickchart.setConfig("{"
-                + "    type: '"+ chart.getType() +"',"
-                + "    data: {"
-                +          labels
-                + "        datasets: ["
-                +               dataSets
-                + "        ]"
-                + "    },"
-                + "    options: {"
-                + "        title: {"
-                + "            display: true,"
-                + "            text: '"+ chart.getTitle() +"'"
-                + "        }"
-                + "    }"
-                + "}"
-        );
-
-        String chartUrl = Quickchart.getShortUrl();
         chart.setChartUrl(chartUrl);
         if(!statsDao.updateChart(chart, chartUrl))
             chartUpdated = false;
@@ -174,6 +134,31 @@ public class ChartServiceImpl implements ChartService{
         chart.setLabels(new ArrayList<>(chart.getLabelsMap().values()));
         update = false;
         return chartUpdated;
+    }
+
+    private String getQuickChart(Chart chart, String labels, String dataSets){
+
+        QuickChart Quickchart = new QuickChart();
+        Quickchart.setWidth(chart.getWidth());
+        Quickchart.setHeight(chart.getHeight());
+        Quickchart.setConfig("{"
+                + "    type: '"+ chart.getType() +"',"
+                + "    data: {"
+                +          labels
+                + "        datasets: ["
+                +               dataSets
+                + "        ]"
+                + "    },"
+                + "    options: {"
+                + "        title: {"
+                + "            display: true,"
+                + "            text: '"+ chart.getTitle() +"'"
+                + "        }"
+                + "    }"
+                + "}"
+        );
+
+        return Quickchart.getShortUrl();
     }
 
     @Override
@@ -287,6 +272,25 @@ public class ChartServiceImpl implements ChartService{
             case "pie":
             case "doughnut":
                 template = "PieDataset";
+                break;
+        }
+        return template;
+    }
+
+    @Override
+    public String getChartTemplate(String type){
+        String template = "";
+
+        switch (type) {
+            case "bar":
+                template = "barTemplate";
+                break;
+            case "line":
+                template = "lineTemplate";
+                break;
+            case "pie":
+            case "doughnut":
+                template = "pieTemplate";
                 break;
         }
         return template;

@@ -1,11 +1,15 @@
 package com.quickChart.REST;
 
 import com.quickChart.entity.Chart;
+import com.quickChart.entity.User;
+import com.quickChart.persistence.UserDao;
 import com.quickChart.service.ChartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -24,7 +28,7 @@ public class ChartControllerJSON  implements WebMvcConfigurer {
     @GetMapping(value = "/")
     @ResponseBody
     public ResponseEntity showHomePage() {
-        List<Chart> charts = chartService.getCharts(1);
+        List<Chart> charts = chartService.getCharts(getUserId());
         if(charts != null) {
             return ResponseEntity.ok(charts);
         }else{
@@ -75,6 +79,13 @@ public class ChartControllerJSON  implements WebMvcConfigurer {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("chart ID has not been found");
             }
         }
+    }
+
+    private int getUserId(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDao userDao = new UserDao();
+        User user = userDao.getUserByFirstName(auth.getName());
+        return user.getUser_id();
     }
 
 }
