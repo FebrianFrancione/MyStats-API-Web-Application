@@ -187,7 +187,7 @@ public class ChartController implements WebMvcConfigurer {
 
     @PostMapping("/sendGrid")
     public String sendEmail(Model model, @ModelAttribute("email") EmailInfo emailInfo) throws IOException{
-        System.out.println(chartService.sendEmail(emailInfo.getEmailTo(), emailInfo.getChartUrl()));
+        System.out.println(chartService.sendEmail(emailInfo.getEmailTo(), emailInfo.getChartUrl(), emailInfo.getMsg()));
         model.addAttribute("posted", true);
         return "SendChart";
     }

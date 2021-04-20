@@ -7,6 +7,7 @@ import com.sendgrid.Request;
 import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Attachments;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 import com.sendgrid.helpers.mail.objects.Personalization;
@@ -23,11 +24,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -306,16 +303,27 @@ public class ChartServiceImpl implements ChartService{
     }
 
     @Override
-    public String sendEmail(String email, String url){
+    public String sendEmail(String email, String url, String msg){
         Email from = new Email("ekdms7027@naver.com");
         String subject = "From Chart Web Service using SendGrid API";
         Email to = new Email(email);
-        Content content = new Content("text/plain", url);
+        Content content = new Content("text/plain", msg);
         Mail mail = new Mail(from, subject, to, content);
 
         SendGrid sg = new SendGrid("");
         Request request = new Request();
         try {
+//            Attachments attachments = new Attachments();
+//            File file = new File(url);
+//            byte[] fileContent = Files.readAllBytes(file.toPath());
+//            String encodedString = Base64.getEncoder().encodeToString(fileContent);
+//            attachments.setContent(encodedString);
+//            attachments.setDisposition("attachment");
+//            attachments.setFilename("screenshot5.png");
+//            attachments.setType("image/png");
+//
+//            mail.addAttachments(attachments);
+
             request.setMethod(Method.POST);
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
