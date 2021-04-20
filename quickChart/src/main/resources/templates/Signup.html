@@ -16,7 +16,16 @@
         </div>
     </div>
 </header>
+<a th:href="@{/chart/}"  style="--i: 0.05s;">Home</a>
 
+<div class="create">
+    <form class="create-form" action="#" method="post" th:action="@{/chart/createUser}" th:object="${user}">
+        <input placeholder="First Name" type="text" th:field="*{first_name}" />
+        <input placeholder="Last Name" type="text" th:field="*{last_name}" />
+        <input placeholder="Password" type="text" th:field="*{password}" />
+        <input type="submit" class="create-btn" value="CREATE" />
+    </form>
+</div>
 
 </body>
 </html>

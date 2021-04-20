@@ -3,7 +3,7 @@
     <nav th:fragment="nav" class="navbar navbar-expand-sm bg-dark navbar-dark mb-3">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item"><a class="nav-link" th:href="@{/chart/}" >Home</a></li>
-            <li class="nav-item"><a class="nav-link" th:href="@{/chart/Post}" >Create chart</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/chart/PostForm}" >Create chart</a></li>
             <li class="nav-item"><a class="nav-link" th:href="@{/chart/UploadFile}" >Upload CSV</a></li>
         </ul>
         <form class="form-inline my-2 mr-3 my-lg-0" th:action="@{/chart/Signup}" method="post">

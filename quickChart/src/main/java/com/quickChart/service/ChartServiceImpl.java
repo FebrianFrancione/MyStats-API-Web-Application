@@ -1,19 +1,26 @@
 package com.quickChart.service;
 import com.quickChart.entity.Chart;
 import com.quickChart.entity.DataSet;
+import com.quickChart.entity.User;
+import com.quickChart.persistence.JDBConfig;
 import com.quickChart.persistence.StatsDAO;
+import com.quickChart.persistence.UserDao;
 import com.sendgrid.Method;
 import com.sendgrid.Request;
 import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Attachments;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 import com.sendgrid.helpers.mail.objects.Personalization;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import io.quickchart.QuickChart;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,18 +29,25 @@ import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.ArrayList;
+import java.nio.file.StandardCopyOption;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class ChartServiceImpl implements ChartService{
 
+    UserDao userDao = new UserDao();
     StatsDAO statsDao = new StatsDAO();
     private boolean update = false;
+
+    @Override
+    public void createUser(User user) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String pw_hash2 = bCryptPasswordEncoder.encode(user.getPassword());
+//        String pw_hash = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+        user.setPassword(pw_hash2);
+        userDao.createUser(user);
+    }
 
     @Override
     public Chart getChart(int chartId){
@@ -305,16 +319,27 @@ public class ChartServiceImpl implements ChartService{
     }
 
     @Override
-    public String sendEmail(String email, String url){
+    public String sendEmail(String email, String url, String msg){
         Email from = new Email("ekdms7027@naver.com");
         String subject = "From Chart Web Service using SendGrid API";
         Email to = new Email(email);
-        Content content = new Content("text/plain", url);
+        Content content = new Content("text/plain", msg);
         Mail mail = new Mail(from, subject, to, content);
 
         SendGrid sg = new SendGrid("");
         Request request = new Request();
         try {
+//            Attachments attachments = new Attachments();
+//            File file = new File(url);
+//            byte[] fileContent = Files.readAllBytes(file.toPath());
+//            String encodedString = Base64.getEncoder().encodeToString(fileContent);
+//            attachments.setContent(encodedString);
+//            attachments.setDisposition("attachment");
+//            attachments.setFilename("screenshot5.png");
+//            attachments.setType("image/png");
+//
+//            mail.addAttachments(attachments);
+
             request.setMethod(Method.POST);
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
@@ -331,13 +356,13 @@ public class ChartServiceImpl implements ChartService{
     }
 
     @Override
-    public void downloadImg(String name, String url) {
+    public boolean downloadImg(String url, String title) {
         try(InputStream in = new URL(url).openStream()){
-            Files.copy(in, Paths.get("C:\\Users\\kiho2\\Desktop\\Concordia\\" + name +".jpg"));
+            Files.copy(in, Paths.get(System.getProperty("java.io.tmpdir") + "\\" + title + ".jpg"), StandardCopyOption.REPLACE_EXISTING);
+            return true;
         }catch(IOException e){
-            e.printStackTrace();
+            return false;
         }
-
     }
 
     @Override
@@ -352,9 +377,9 @@ public class ChartServiceImpl implements ChartService{
             ArrayList<Integer> data = new ArrayList<>();
             ArrayList<Integer> dataOrder = new ArrayList<>(); // [1,3,5]
 
+            int numOfLine = 0;
             boolean flag = false;
             while((line=br.readLine()) != null) {
-                // System.out.println(line);
                 String[] token = line.split(",");
                 if(flag){
                     for(int i = 0; i < labelOrder.size() ; i++){
@@ -374,11 +399,20 @@ public class ChartServiceImpl implements ChartService{
                     }
                     flag = true;
                 }
+                ++numOfLine;
 
-                //List<String> tempList = new ArrayList<String>(Arrays.asList(token));
-                //list.add(tempList);
+                // format should have only 2 lines.
+                if(numOfLine == 2){
+                    break;
+                }
 
             }
+
+            // Number of labels and values should be same.
+            if(labelOrder.size() != dataOrder.size()){
+                return null;
+            }
+
             chart.setLabels(labels);
             DataSet dataset = new DataSet();
             dataset.setData(data);
@@ -397,6 +431,8 @@ public class ChartServiceImpl implements ChartService{
             }
         }
     }
+
+
 
 
 }

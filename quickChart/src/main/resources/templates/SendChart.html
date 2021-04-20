@@ -30,6 +30,13 @@
                 </div>
 
                 <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 col-xs-3" for="msg">Message</label>
+                    <div class="col-md-8 col-sm-8 col-xs-8">
+                        <textarea placeholder="Enter the message to send" class="form-control" id="msg" rows="7" th:field="*{msg}"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group row">
                     <label class="col-form-label col-md-3 col-sm-3 col-xs-3">Chart URL</label>
                     <div class="col-md-8 col-sm-8 col-xs-8">
                         <input placeholder="Enter chart url" class="form-control" type="text" th:field="*{chartUrl}" required />

@@ -1,9 +1,6 @@
 package com.quickChart.REST;
 
-import com.quickChart.entity.Chart;
-import com.quickChart.entity.DataSet;
-import com.quickChart.entity.Download;
-import com.quickChart.entity.EmailInfo;
+import com.quickChart.entity.*;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
@@ -40,6 +37,7 @@ public class ChartController implements WebMvcConfigurer {
     private ChartService chartService;
     private boolean uploadCSV = false;
     private Chart uploadedChart;
+    private boolean formatCSV = true;
 
     @Autowired
     public ChartController(ChartService chartService) {
@@ -54,8 +52,15 @@ public class ChartController implements WebMvcConfigurer {
     }
 
     @GetMapping( "/Signup")
-    public String showSignupPage() {
+    public String showSignupPage(Model model) {
+        model.addAttribute("user", new User());
         return "Signup";
+    }
+
+    @PostMapping( "/createUser")
+    public String showSignupPage(Model model, @ModelAttribute("album") User user) {
+        chartService.createUser(user);
+        return "Home";
     }
 
     @GetMapping("/viewChart")
@@ -67,8 +72,8 @@ public class ChartController implements WebMvcConfigurer {
         return "ViewChart";
     }
 
-    @GetMapping("/Post")
-    public String showPost(Model model){
+    @GetMapping("/PostForm")
+    public String postForm(Model model){
         model.addAttribute("chart", new Chart());
         return "CreateChart";
     }
@@ -82,15 +87,23 @@ public class ChartController implements WebMvcConfigurer {
         return "SendChart";
     }
 
-    @GetMapping("/Download")
-    public String download(Model model){
-        model.addAttribute("download", new Download());
-        return "DownloadChart";
-    }
+//    @GetMapping("/Download")
+//    public String download(Model model){
+//        model.addAttribute("download", new Download());
+//        return "DownloadChart";
+//    }
 
     @GetMapping("/UploadFile")
     public String uploadLink(Model model){
         model.addAttribute("chart", new Chart());
+
+        if(!formatCSV){
+            model.addAttribute("formatValidate", true);
+            formatCSV = true;
+        }else{
+            model.addAttribute("formatValidate", false);
+        }
+
         return "UploadFile";
     }
 
@@ -167,12 +180,18 @@ public class ChartController implements WebMvcConfigurer {
         Chart newChart = chartService.uploadCSV(chart, file);
         uploadCSV = true;
         uploadedChart = newChart;
-        return new RedirectView("/chart/createDataSet");
+
+        if(newChart == null){
+            formatCSV = false;
+            return new RedirectView("/chart/UploadFile");
+        }else{
+            return new RedirectView("/chart/createDataSet");
+        }
     }
 
     @PostMapping("/sendGrid")
     public String sendEmail(Model model, @ModelAttribute("email") EmailInfo emailInfo) throws IOException{
-        System.out.println(chartService.sendEmail(emailInfo.getEmailTo(), emailInfo.getChartUrl()));
+        System.out.println(chartService.sendEmail(emailInfo.getEmailTo(), emailInfo.getChartUrl(), emailInfo.getMsg()));
         model.addAttribute("posted", true);
         return "SendChart";
     }
@@ -180,9 +199,18 @@ public class ChartController implements WebMvcConfigurer {
     @PostMapping("/downloadChart")
     public String downloadChart(Model model, @RequestParam int chartId){
         Chart chart = chartService.getChart(chartId);
-        chartService.downloadImg(chart.getTitle(), chart.getChartUrl());
-        model.addAttribute("posted", true);
-        return "DownloadChart";
+        boolean success = chartService.downloadImg(chart.getChartUrl(), chart.getTitle());
+        String template = getChartTemplate(chart.getType());
+
+        if(success){
+            model.addAttribute("posted", true);
+        }else{
+            model.addAttribute("downloadFail", true);
+        }
+
+        model.addAttribute(template, true);
+        model.addAttribute("chart", chart);
+        return "ViewChart";
     }
 
 }
