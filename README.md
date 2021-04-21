@@ -784,7 +784,7 @@ application back-end.
 The action is: updating an existing Bar chart from the view.
 
 
-  ![QuickChart Sequence Diagram](documentation/QuickChart API diagram.png)
+  ![QuickChart Sequence Diagram](documentation/QuickChart_diagram.png)
 
 
 ## License
