@@ -60,33 +60,13 @@ public class ChartServiceImpl implements ChartService{
     }
 
     @Override
-    public String createChart(Chart chart, int userId){
+    public boolean createChart(Chart chart, int userId){
 
         String labels = setLabels(chart.getLabels());
         DataSet dataSet = chart.getDataSet();
         String dataSets = setDataset(chart.getType(), dataSet);
-
-        QuickChart Quickchart = new QuickChart();
-        Quickchart.setWidth(chart.getWidth());
-        Quickchart.setHeight(chart.getHeight());
-        Quickchart.setConfig("{"
-                + "    type: '"+ chart.getType() +"',"
-                + "    data: {"
-                +          labels
-                + "        datasets: ["
-                +               dataSets
-                + "        ]"
-                + "    },"
-                + "    options: {"
-                + "        title: {"
-                + "            display: true,"
-                + "            text: '"+ chart.getTitle() +"'"
-                + "        }"
-                + "    }"
-                + "}"
-        );
-
-        String chartUrl = Quickchart.getShortUrl();
+        String chartUrl = getQuickChart(chart, labels, dataSets);
+        boolean created = true;
         int chartId = statsDao.addChart(chart, chartUrl, userId);
 
         if(chartId >= 1) {
@@ -108,11 +88,15 @@ public class ChartServiceImpl implements ChartService{
                 System.out.println("Dataset has been created with ID " + dataset_id);
                 statsDao.addData(dataSet.getData(), dataset_id);
             }
+            else
+                created = false;
 
         }
+        else
+            created = false;
 
         chart.setChartUrl(chartUrl);
-        return chartUrl;
+        return created;
     }
 
     @Override
@@ -123,28 +107,8 @@ public class ChartServiceImpl implements ChartService{
         String labels = setLabelsMap(chart.getLabelsMap());
         DataSet dataSet = chart.getDataSet();
         String dataSets = setDataset(chart.getType(), dataSet);
+        String chartUrl = getQuickChart(chart, labels, dataSets);
 
-        QuickChart Quickchart = new QuickChart();
-        Quickchart.setWidth(chart.getWidth());
-        Quickchart.setHeight(chart.getHeight());
-        Quickchart.setConfig("{"
-                + "    type: '"+ chart.getType() +"',"
-                + "    data: {"
-                +          labels
-                + "        datasets: ["
-                +               dataSets
-                + "        ]"
-                + "    },"
-                + "    options: {"
-                + "        title: {"
-                + "            display: true,"
-                + "            text: '"+ chart.getTitle() +"'"
-                + "        }"
-                + "    }"
-                + "}"
-        );
-
-        String chartUrl = Quickchart.getShortUrl();
         chart.setChartUrl(chartUrl);
         if(!statsDao.updateChart(chart, chartUrl))
             chartUpdated = false;
@@ -174,6 +138,31 @@ public class ChartServiceImpl implements ChartService{
         chart.setLabels(new ArrayList<>(chart.getLabelsMap().values()));
         update = false;
         return chartUpdated;
+    }
+
+    private String getQuickChart(Chart chart, String labels, String dataSets){
+
+        QuickChart Quickchart = new QuickChart();
+        Quickchart.setWidth(chart.getWidth());
+        Quickchart.setHeight(chart.getHeight());
+        Quickchart.setConfig("{"
+                + "    type: '"+ chart.getType() +"',"
+                + "    data: {"
+                +          labels
+                + "        datasets: ["
+                +               dataSets
+                + "        ]"
+                + "    },"
+                + "    options: {"
+                + "        title: {"
+                + "            display: true,"
+                + "            text: '"+ chart.getTitle() +"'"
+                + "        }"
+                + "    }"
+                + "}"
+        );
+
+        return Quickchart.getShortUrl();
     }
 
     @Override
@@ -292,6 +281,25 @@ public class ChartServiceImpl implements ChartService{
         return template;
     }
 
+    @Override
+    public String getChartTemplate(String type){
+        String template = "";
+
+        switch (type) {
+            case "bar":
+                template = "barTemplate";
+                break;
+            case "line":
+                template = "lineTemplate";
+                break;
+            case "pie":
+            case "doughnut":
+                template = "pieTemplate";
+                break;
+        }
+        return template;
+    }
+
     public String setDataset(String chartType, DataSet dataSet){
         String dataSetJson = "";
 
@@ -328,30 +336,16 @@ public class ChartServiceImpl implements ChartService{
         Email from = new Email("ekdms7027@naver.com");
         String subject = "From Chart Web Service using SendGrid API";
         Email to = new Email(email);
-        Content content = new Content("text/plain", msg);
+        Content content = new Content("text/html", "<p>"+msg+"</p>"+"<br/>"+"<img src=\""+url+"\" />");
         Mail mail = new Mail(from, subject, to, content);
 
         SendGrid sg = new SendGrid("");
         Request request = new Request();
         try {
-//            Attachments attachments = new Attachments();
-//            File file = new File(url);
-//            byte[] fileContent = Files.readAllBytes(file.toPath());
-//            String encodedString = Base64.getEncoder().encodeToString(fileContent);
-//            attachments.setContent(encodedString);
-//            attachments.setDisposition("attachment");
-//            attachments.setFilename("screenshot5.png");
-//            attachments.setType("image/png");
-//
-//            mail.addAttachments(attachments);
-
             request.setMethod(Method.POST);
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
             Response response = sg.api(request);
-//            System.out.println(response.getStatusCode());
-//            System.out.println(response.getBody());
-//            System.out.println(response.getHeaders());
 
         } catch (IOException ex) {
             ex.printStackTrace();

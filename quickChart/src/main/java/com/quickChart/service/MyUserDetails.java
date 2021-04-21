@@ -17,6 +17,8 @@ public class MyUserDetails implements UserDetails {
         this.user = user;
     }
 
+    public MyUserDetails() {}
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 //        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getToken());
@@ -33,12 +35,6 @@ public class MyUserDetails implements UserDetails {
     public String getUsername() {
         return user.getFirst_name();
     }
-
-//
-//    @Override
-//    public String getFirst_name() {
-//        return user.getFirst_name();
-//    }
 
     @Override
     public boolean isAccountNonExpired() {

@@ -12,9 +12,10 @@ import java.util.List;
 public interface ChartService {
     public Chart getChart(int chartId);
     public List<Chart> getCharts(int userId);
-    public String createChart(Chart chart, int userId);
+    public boolean createChart(Chart chart, int userId);
     public boolean updateChart(Chart chart);
     public String getDataSetTemplate(String chartType);
+    public String getChartTemplate(String type);
     public ArrayList<String> generateColors(int length);
     public String sendEmail(String email, String url, String msg);
     public boolean downloadImg(String url, String title);

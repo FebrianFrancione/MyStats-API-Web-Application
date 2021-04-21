@@ -138,7 +138,8 @@ public class StatsDAO {
                 int width = rs.getInt("width");
                 int height = rs.getInt("height");
                 DataSet dataSet = getDataset(rs, type);
-                chart = new Chart(chartId, title, chartUrl, width, height, type, getLabels(chartId), dataSet);
+                int userId = rs.getInt("user_id");
+                chart = new Chart(chartId, title, chartUrl, width, height, type, getLabels(chartId), dataSet, userId);
             }
 
         }catch(SQLException e){

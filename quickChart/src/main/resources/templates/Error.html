@@ -1,7 +1,6 @@
-<!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Displaying Chart</title>
+    <title>Error</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -10,25 +9,14 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body class="bg-light text-center">
-<div th:insert="nav-bar :: nav"></div>
 <div class="container-fluid">
-    <div th:insert="Error :: error"></div>
     <div class="row justify-content-center">
-        <div class="chart">
-            <div class="row">
+        <div class="col">
+            <div class="row" th:fragment="error" th:if="${error}">
                 <div class="col">
-                    <h2 class="text-center">Chart</h2>
-                </div>
-            </div>
-            <div class="row" th:if = "${posted}">
-                <div class="col">
-                    <div class="alert alert-info alert-dismissible fade show">
+                    <div class="alert alert-danger alert-dismissible fade show">
                         <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <p><strong>Success!</strong> New chart created</p>
-                    </div>
-                    <p class="message"> chart URL :  <span th:text="${chart.getChartUrl()}"></span></p>
-                    <div>
-                        <img th:src="${chart.getChartUrl()}" alt="Chart"/>
+                        <p><span th:text="${message}"></span></p>
                     </div>
                 </div>
             </div>
@@ -37,3 +25,4 @@
 </div>
 </body>
 </html>
+
