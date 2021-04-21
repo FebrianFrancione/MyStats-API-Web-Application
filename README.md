@@ -389,10 +389,13 @@ Deletes the chart from the Database and returns to home page without the deleted
 ## JSON Controller Documentation
 
 Following are the main entry points of the Web Service which are processed by the JSON controller.
-These are all Spring Boot Controller methods that route the response to a Thymeleaf View following the MVC pattern.
-Postman will be the web service client.
+This is to be used by an external thin web service client such as Postman, Curl, Terminal or any other.
 
 All the methods produce :
+
+`{MediaType.APPLICATION_JSON_VALUE}`
+
+All the methods accept :
 
 `{MediaType.APPLICATION_JSON_VALUE}`
 
@@ -402,7 +405,7 @@ Base url:
 
 ### Get All Charts
 
-Users can get all their own charts.
+Users can get all their charts.
 
 - Request URL: `/`
 
@@ -506,7 +509,7 @@ Get a specific chart using chart ID.
 
 ### Create a New Chart
 
-Create a new chart with sending JSON format data.
+Create a new chart sent as JSON format data.
 
 - Request URL: `/createChart`
 
@@ -557,15 +560,157 @@ Create a new chart with sending JSON format data.
   }
   ```
 
+  Pie or Doughnut Type Chart:
+
+  ```json
+  {
+    "title": "pie chart",
+    "width": 789,
+    "height": 450,
+    "type": "pie",
+    "labels": ["label1", "label2", "label3", "label4"],
+    "dataSet": {
+      "data": [120, 85, 40, 96],
+      "label": "color set",
+      "borderWidth": 5,
+      "backgroundColors": ["#4a449f", "#a195b8", "#7dc15a", "#12d879"]
+    }
+  }
+  ```
+  
 - Success Response:
 
   - Status Code: 200
-  - Content : Return with chart URL
+  - Content :
+    
+        Successfully created new chart
+        Chart URL: https: //quickchart.io/chart/render/zf-439b0cc1-67fb-4b3d-b8fc-fe32c0d15810
 
 - Error Response:
   - Status Code: 404
   - Content : The chart entity is empty, please provide the JSON chart structure
 
+
+### Update a Chart
+
+Update an existing chart sent as JSON format data.
+
+- Request URL: `/updateChart`
+
+- Method: `PUT`
+
+- URL Params: None
+
+- Data Params:
+
+  Bar Type Chart with the IDs set for each data and map:
+
+  ```json
+  {
+    "chartId": 71,
+    "title": "update chart",
+    "width": 600,
+    "height": 400,
+    "type": "bar",
+    "dataSet": {
+      "datasetId": 67,
+      "label": "bar dataset",
+      "border_color": "#f28e2b",
+      "background_color": "#ffead6",
+      "borderWidth": 2,
+      "dataMap": {
+        "225": 56,
+        "226": 122,
+        "227": 44
+      }
+    },
+    "labelsMap": {
+      "240": "labelx",
+      "241": "labely",
+      "242": "labelz"
+    }
+  }
+  ```
+
+  Line Type Chart with the IDs set for each data and map:
+
+  ```json
+  {
+    "chartId": 71,
+    "title": "test chart",
+    "width": 600,
+    "height": 400,
+    "type": "line",
+    "dataSet": {
+      "datasetId": 67,
+      "label": "bar dataset",
+      "border_color": "#f28e2b",
+      "background_color": "#ffead6",
+      "fill": true,
+      "borderWidth": 2,
+      "pointRadius": 3,
+      "showLine": true,
+      "dataMap": {
+        "225": 56,
+        "226": 122,
+        "227": 44
+      }
+    },
+    "labelsMap": {
+      "240": "labelx",
+      "241": "labely",
+      "242": "labelz"
+    }
+  }
+  ```
+
+  Pie or Doughnut Type Chart with the IDs set for each data and map:
+
+  ```json
+  {
+    "chartId": 71,
+    "title": "test chart",
+    "width": 600,
+    "height": 400,
+    "type": "doughnut",
+    "dataSet": {
+      "datasetId": 67,
+      "label": "bar dataset",
+      "borderWidth": 2,
+      "dataMap": {
+        "225": 56,
+        "226": 122,
+        "227": 44
+      },
+      "backgroundColorMap": {
+        "69": "#4a449f",
+        "70": "#a195b8",
+        "71": "#7dc15a"
+      }
+    },
+    "labelsMap": {
+      "240": "labelx",
+      "241": "labely",
+      "242": "labelz"
+    }
+  }
+  ```
+
+- Success Response:
+
+  - Status Code: 200
+  - Content :
+    
+        Successfully updated new chart
+        Chart URL: https: //quickchart.io/chart/render/zf-439b0cc1-67fb-4b3d-b8fc-fe32c0d15810
+
+- Error Response:
+  - Status Code: 404
+  - Content : 
+      
+        Failed to update chart or dataset
+
+  
 ### Delete Chart
 
 Delete a chart using chart ID.
@@ -590,6 +735,40 @@ Delete a chart using chart ID.
 - Error Response:
   - Status Code: 400
   - Content : Chart ID has not been found
+
+
+### Send chart to email
+
+Sends chart as email with Sendgrid
+
+- Request URL: `/sendGrid`
+
+- Method: `POST`
+
+- URL Params: None
+
+- Data Params:
+
+      EmailInfo:
+
+  ```json
+  {
+    "emailTo": "user@gmail.com",
+    "chartUrl": "https://quickchart.io/chart/render/zf-48f27f47-e6d8-4cb1-a2e5-45c42acc1f9c",
+    "msg": "body message of email"
+  }
+  ```
+
+- Success Response:
+
+  - Status Code: 200
+  - Content : mail has been sent check your inbox.
+  
+
+- Error Response:
+  - Status Code: 400
+  - Content : The email info entity is empty, please provide the JSON email data structure
+  
 
 ## License
 

@@ -1,6 +1,7 @@
 package com.quickChart.REST;
 
 import com.quickChart.entity.Chart;
+import com.quickChart.entity.EmailInfo;
 import com.quickChart.entity.User;
 import com.quickChart.persistence.UserDao;
 import com.quickChart.service.ChartService;
@@ -84,6 +85,37 @@ public class ChartControllerJSON  implements WebMvcConfigurer {
             else{
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("chart ID has not been found");
             }
+        }
+    }
+
+    @PutMapping( "/updateChart")
+    @ResponseBody
+    public ResponseEntity updateChart(@RequestBody Chart chart) {
+        if(chart == null){
+            String message = "The chart entity is empty, please provide the JSON chart structure";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+        }
+        else{
+            boolean updated = chartService.updateChart(chart);
+            if(updated)
+                return ResponseEntity.ok("Successfully updated your chart\nChart URL: " + chart.getChartUrl());
+            else{
+                String message = "Failed to update chart or dataset";
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            }
+        }
+    }
+
+    @PostMapping("/sendGrid")
+    @ResponseBody
+    public ResponseEntity sendEmail(@RequestBody EmailInfo emailInfo){
+        if(emailInfo == null){
+            String message = "The email info entity is empty, please provide the JSON email data structure";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+        }
+        else{
+            String sent = chartService.sendEmail(emailInfo.getEmailTo(), emailInfo.getChartUrl(), emailInfo.getMsg());
+            return ResponseEntity.ok(sent);
         }
     }
 
