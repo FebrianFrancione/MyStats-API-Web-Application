@@ -774,6 +774,11 @@ Sends chart as email with Sendgrid
 
 Following are the UML diagrams and the Sequence Diagrams of the Service API
 
+### UML Class Diagram
+
+UML class diagram for JSON Controller
+
+![UML Class Diagram](documentation/Soen487A3_UML_Diagram.png)
 
 ### Sequence Diagrams
 
@@ -785,9 +790,15 @@ The action is: updating an existing Bar chart from the view.
 
 
   ![QuickChart Sequence Diagram](documentation/QuickChart_diagram.png)
+
+The following sequence diagram depicts the flow when a user wants to see a specific chart.
+
+The action is : find the chart using chart ID and then display the result to the view.
+
+  ![Get Chart Sequence Diagram](documentation/Real_User.png)
   
   
-  Business Function: Create a chart
+Business Function: Create a chart
   ![QuickChart Sequence Diagram2](documentation/WSCreate.png)
   
 
