@@ -39,13 +39,13 @@ to the database and make SQL transactions please use the following configuration
 
 These settings are saved in and loaded from the config.json file (src/main/java/com/quickChart/persistence/config.json). It has the following structure:
 
-  ```json
-    {
-      "dbURL": "jdbc url",
-      "username": "username",
-      "password": "password"
-    } 
-  ```
+```json
+{
+  "dbURL": "jdbc url",
+  "username": "username",
+  "password": "password"
+}
+```
 
 If you want to use different set of credentials, please modify the config.json file.
 
@@ -590,19 +590,18 @@ Create a new chart sent as JSON format data.
     }
   }
   ```
-  
+
 - Success Response:
 
   - Status Code: 200
   - Content :
-    
+
         Successfully created new chart
         Chart URL: https: //quickchart.io/chart/render/zf-439b0cc1-67fb-4b3d-b8fc-fe32c0d15810
 
 - Error Response:
   - Status Code: 404
   - Content : The chart entity is empty, please provide the JSON chart structure
-
 
 ### Update a Chart
 
@@ -713,17 +712,15 @@ Update an existing chart sent as JSON format data.
 
   - Status Code: 200
   - Content :
-    
+
         Successfully updated new chart
         Chart URL: https: //quickchart.io/chart/render/zf-439b0cc1-67fb-4b3d-b8fc-fe32c0d15810
 
 - Error Response:
   - Status Code: 404
-  - Content : 
-      
+  - Content :
         Failed to update chart or dataset
 
-  
 ### Delete Chart
 
 Delete a chart using chart ID.
@@ -748,7 +745,6 @@ Delete a chart using chart ID.
 - Error Response:
   - Status Code: 400
   - Content : Chart ID has not been found
-
 
 ### Send chart to email
 
@@ -776,12 +772,10 @@ Sends chart as email with Sendgrid
 
   - Status Code: 200
   - Content : mail has been sent check your inbox.
-  
 
 - Error Response:
   - Status Code: 400
   - Content : The email info entity is empty, please provide the JSON email data structure
-
 
 ## UML Diagrams
 
@@ -789,32 +783,31 @@ Following are the UML diagrams and the Sequence Diagrams of the Service API
 
 ### UML Class Diagram
 
-UML class diagram for JSON Controller
+UML class diagram for chart controller
 
-![UML Class Diagram](documentation/Soen487A3_UML_Diagram.png)
+![UML Class Diagram](documentation/Soen487A3_UML_Diagram_JSON.png)
+
+UML class diagram for JSON chart controller
+
+![UML Class Diagram - JSON](documentation/Soen487A3_UML_Diagram.png)
 
 ### Sequence Diagrams
 
 The following sequence diagram depicts the flow when the external web service is called by the
 application back-end.
 
-
 The action is: updating an existing Bar chart from the view.
 
-
-  ![QuickChart Sequence Diagram](documentation/QuickChart_diagram.png)
+![QuickChart Sequence Diagram](documentation/QuickChart_diagram.png)
 
 The following sequence diagram depicts the flow when a user wants to see a specific chart.
 
 The action is : find the chart using chart ID and then display the result to the view.
 
-  ![Get Chart Sequence Diagram](documentation/Real_User.png)
-  
-  
-Business Function: Create a chart
-  ![QuickChart Sequence Diagram2](documentation/WSCreate.png)
-  
+![Get Chart Sequence Diagram](documentation/Real_User.png)
 
+Business Function: Create a chart
+![QuickChart Sequence Diagram2](documentation/WSCreate.png)
 
 ## License
 
