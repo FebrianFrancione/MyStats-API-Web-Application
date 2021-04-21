@@ -788,7 +788,7 @@ The action is: updating an existing Bar chart from the view.
   
   
   Business Function: Create a chart
-  ![QuickChart Sequence Diagram](documentation/Create Sequence Diagram - Web .png)
+  ![QuickChart Sequence Diagram2](documentation/Create Sequence Diagram - Web.png)
   
 
 
