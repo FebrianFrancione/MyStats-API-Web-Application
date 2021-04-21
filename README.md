@@ -400,9 +400,9 @@ Base url:
 
 - http://localhost:8080/chart/json
 
-### Get All Charts 
+### Get All Charts
 
-Users can get all their own charts. 
+Users can get all their own charts.
 
 - Request URL: `/`
 
@@ -417,32 +417,179 @@ Users can get all their own charts.
   - Status Code: 200
   - Content : A JSON array of charts
 
-   ```json
+  ```json
   [
     {
-        "chartId": 44,
-        "title": "test",
-        "width": 789,
-        "height": 450,
-        "type": "line",
-        "labels": [],
-        "dataSet": null,
-        "chartUrl": "https://quickchart.io/chart/render/zf-2995e437-6404-420e-aa54-e2252bc81bd8",
-        "labelsMap": {}
+      "chartId": 44,
+      "title": "test",
+      "width": 789,
+      "height": 450,
+      "type": "line",
+      "labels": [],
+      "dataSet": null,
+      "chartUrl": "https://quickchart.io/chart/render/zf-2995e437-6404-420e-aa54-e2252bc81bd8",
+      "labelsMap": {}
     },
     {
-        "chartId": 55,
-        "title": "test chart",
-        "width": 600,
-        "height": 400,
-        "type": "doughnut",
-        "labels": [],
-        "dataSet": null,
-        "chartUrl": "https://quickchart.io/chart/render/zf-b5a5d62a-cc1b-4e5d-ae1c-f1567d77e466",
-        "labelsMap": {}
-    },
-]
+      "chartId": 55,
+      "title": "test chart",
+      "width": 600,
+      "height": 400,
+      "type": "doughnut",
+      "labels": [],
+      "dataSet": null,
+      "chartUrl": "https://quickchart.io/chart/render/zf-b5a5d62a-cc1b-4e5d-ae1c-f1567d77e466",
+      "labelsMap": {}
+    }
+  ]
   ```
+
+### Get Chart using ID
+
+Get a specific chart using chart ID.
+
+- Request URL: `/viewChart`
+
+- Method: `GET`
+
+- URL Params: None
+
+- Data Params:
+
+  Required:
+
+  chartId=[integer]
+
+- Success Response:
+
+  - Status Code: 200
+  - Content : A JSON representation of Chart and Dataset
+
+  ```json
+  {
+    "chartId": 71,
+    "title": "test chart",
+    "width": 600,
+    "height": 400,
+    "type": "bar",
+    "labels": ["labelx", "labely", "labelz"],
+    "dataSet": {
+      "datasetId": 67,
+      "data": [],
+      "label": "bar dataset",
+      "border_color": "#f28e2b",
+      "background_color": "#ffead6",
+      "fill": true,
+      "borderWidth": 2,
+      "pointRadius": 3,
+      "showLine": true,
+      "backgroundColors": [],
+      "dataMap": {
+        "225": 56,
+        "226": 122,
+        "227": 44
+      },
+      "backgroundColorMap": {}
+    },
+    "chartUrl": "https://quickchart.io/chart/render/zf-48f27f47-e6d8-4cb1-a2e5-45c42acc1f9c",
+    "labelsMap": {
+      "240": "labelx",
+      "241": "labely",
+      "242": "labelz"
+    }
+  }
+  ```
+
+- Error Response:
+  - Status Code: 404
+  - Content : Chart with chart ID not found!
+
+### Create a New Chart
+
+Create a new chart with sending JSON format data.
+
+- Request URL: `/createChart`
+
+- Method: `POST`
+
+- URL Params: None
+
+- Data Params:
+
+  Bar Type Chart:
+
+  ```json
+  {
+    "title": "postman chart",
+    "width": 900,
+    "height": 800,
+    "type": "bar",
+    "labels": ["label1", "label2", "labelz"],
+    "dataSet": {
+      "data": [56, 120, 45],
+      "label": "postman dataset",
+      "border_color": "#f22ce1",
+      "background_color": "#ffdbfc",
+      "borderWidth": 8
+    }
+  }
+  ```
+
+  Line Type Chart:
+
+  ```json
+  {
+    "title": "test",
+    "width": 789,
+    "height": 450,
+    "type": "line",
+    "labels": ["label1", "label2", "label3", "label4"],
+    "dataSet": {
+      "data": [120, 85, 40, 96],
+      "label": "color set",
+      "border_color": "#5cb85c",
+      "background_color": "#d0f2cf",
+      "fill": true,
+      "borderWidth": 5,
+      "pointRadius": 10,
+      "showLine": true
+    }
+  }
+  ```
+
+- Success Response:
+
+  - Status Code: 200
+  - Content : Return with chart URL
+
+- Error Response:
+  - Status Code: 404
+  - Content : The chart entity is empty, please provide the JSON chart structure
+
+### Delete Chart
+
+Delete a chart using chart ID.
+
+- Request URL: `/deleteChart`
+
+- Method: `DELETE`
+
+- URL Params:
+
+  Required:
+
+  chartId=[integer]
+
+- Data Params: None
+
+- Success Response:
+
+  - Status Code: 200
+  - Content : Successfully deleted chart with chart ID
+
+- Error Response:
+  - Status Code: 400
+  - Content : Chart ID has not been found
 
 ## License
 
