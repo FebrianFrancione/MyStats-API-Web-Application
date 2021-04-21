@@ -386,6 +386,64 @@ Deletes the chart from the Database and returns to home page without the deleted
   - Status Code: 302
   - Content : Redirect to login if unauthorized access
 
+## JSON Controller Documentation
+
+Following are the main entry points of the Web Service which are processed by the JSON controller.
+These are all Spring Boot Controller methods that route the response to a Thymeleaf View following the MVC pattern.
+Postman will be the web service client.
+
+All the methods produce :
+
+`{MediaType.APPLICATION_JSON_VALUE}`
+
+Base url:
+
+- http://localhost:8080/chart/json
+
+### Get All Charts 
+
+Users can get all their own charts. 
+
+- Request URL: `/`
+
+- Method: `GET`
+
+- URL Params: None
+
+- Data Params: None
+
+- Success Response:
+
+  - Status Code: 200
+  - Content : A JSON array of charts
+
+   ```json
+  [
+    {
+        "chartId": 44,
+        "title": "test",
+        "width": 789,
+        "height": 450,
+        "type": "line",
+        "labels": [],
+        "dataSet": null,
+        "chartUrl": "https://quickchart.io/chart/render/zf-2995e437-6404-420e-aa54-e2252bc81bd8",
+        "labelsMap": {}
+    },
+    {
+        "chartId": 55,
+        "title": "test chart",
+        "width": 600,
+        "height": 400,
+        "type": "doughnut",
+        "labels": [],
+        "dataSet": null,
+        "chartUrl": "https://quickchart.io/chart/render/zf-b5a5d62a-cc1b-4e5d-ae1c-f1567d77e466",
+        "labelsMap": {}
+    },
+]
+  ```
+
 ## License
 
 This project is licensed under the GNU General Public License v3.0 - see the [LICENSE.md](LICENSE) file for details
