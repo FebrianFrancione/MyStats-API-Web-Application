@@ -768,7 +768,24 @@ Sends chart as email with Sendgrid
 - Error Response:
   - Status Code: 400
   - Content : The email info entity is empty, please provide the JSON email data structure
-  
+
+
+## UML Diagrams
+
+Following are the UML diagrams and the Sequence Diagrams of the Service API
+
+
+### Sequence Diagrams
+
+The following sequence diagram depicts the flow when the external web service is called by the
+application back-end.
+
+
+The action is: updating an existing Bar chart from the view.
+
+
+  ![QuickChart Sequence Diagram](documentation/QuickChart API diagram.png)
+
 
 ## License
 
