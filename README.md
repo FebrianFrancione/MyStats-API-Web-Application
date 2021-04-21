@@ -27,6 +27,7 @@ The additional dependencies added to the pom.xml file are:
 - sendgrid-java
 - spring-security-test
 - mysql-connector-java
+- javax.json
 
 The web service generates charts and uses persistence through MySQL database. In order to connect
 to the database and make SQL transactions please use the following configuration settings:
@@ -35,6 +36,18 @@ to the database and make SQL transactions please use the following configuration
 - Port: 3306
 - Username: root
 - Password: 1234
+
+These settings are saved in and loaded from the config.json file (src/main/java/com/quickChart/persistence/config.json). It has the following structure:
+
+  ```json
+    {
+      "dbURL": "jdbc url",
+      "username": "username",
+      "password": "password"
+    } 
+  ```
+
+If you want to use different set of credentials, please modify the config.json file.
 
 The Database Schema to create the database and the tables is provided in the file: src/main/java/com/quickChart/persistence/database.sql
 
