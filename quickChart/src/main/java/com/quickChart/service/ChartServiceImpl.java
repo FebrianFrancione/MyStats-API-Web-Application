@@ -60,13 +60,13 @@ public class ChartServiceImpl implements ChartService{
     }
 
     @Override
-    public String createChart(Chart chart, int userId){
+    public boolean createChart(Chart chart, int userId){
 
         String labels = setLabels(chart.getLabels());
         DataSet dataSet = chart.getDataSet();
         String dataSets = setDataset(chart.getType(), dataSet);
         String chartUrl = getQuickChart(chart, labels, dataSets);
-
+        boolean created = true;
         int chartId = statsDao.addChart(chart, chartUrl, userId);
 
         if(chartId >= 1) {
@@ -88,11 +88,15 @@ public class ChartServiceImpl implements ChartService{
                 System.out.println("Dataset has been created with ID " + dataset_id);
                 statsDao.addData(dataSet.getData(), dataset_id);
             }
+            else
+                created = false;
 
         }
+        else
+            created = false;
 
         chart.setChartUrl(chartUrl);
-        return chartUrl;
+        return created;
     }
 
     @Override

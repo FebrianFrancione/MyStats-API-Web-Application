@@ -13,6 +13,9 @@
 <body class="bg-light text-center">
 <div th:insert="nav-bar :: nav"></div>
 <div class="container-fluid">
+    <div class="row justify-content-center" th:if="${error}">
+        <div class="col" th:insert="Error :: error"></div>
+    </div>
     <div class="row justify-content-center" th:if = "${updated}">
         <div class="col">
             <div class="alert alert-info alert-dismissible fade show">

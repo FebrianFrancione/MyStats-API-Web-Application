@@ -15,6 +15,7 @@ public class Chart {
     private DataSet dataSet;
     private String chartUrl;
     private Map<Integer, String> labelsMap = new HashMap<>();
+    private int userId;
 
     public Chart() {
     }
@@ -29,7 +30,7 @@ public class Chart {
         this.chartUrl = chartUrl;
     }
 
-    public Chart(int chartId, String title, String chartUrl, int width, int height, String type, Map<Integer, String> labelsMap, DataSet dataset) {
+    public Chart(int chartId, String title, String chartUrl, int width, int height, String type, Map<Integer, String> labelsMap, DataSet dataset, int userId) {
         super();
         this.chartId = chartId;
         this.title = title;
@@ -39,6 +40,7 @@ public class Chart {
         this.chartUrl = chartUrl;
         this.labelsMap = labelsMap;
         this.dataSet = dataset;
+        this.userId = userId;
 
         for (Map.Entry<Integer, String> label : labelsMap.entrySet()) {
             labels.add(label.getValue());
@@ -115,5 +117,13 @@ public class Chart {
 
     public void setLabelsMap(Map<Integer, String> labelsMap) {
         this.labelsMap = labelsMap;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

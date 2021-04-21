@@ -44,7 +44,14 @@ public class ChartController implements WebMvcConfigurer {
         UserDao userDao = new UserDao();
         User user = userDao.getUserByFirstName(auth.getName());
         List<Chart> charts = chartService.getCharts(user.getUser_id());
-        model.addAttribute(charts);
+
+        if(charts == null){
+            model.addAttribute("error", true);
+            model.addAttribute("message", "Failed to get charts");
+        }
+        else
+            model.addAttribute(charts);
+
         return "Home";
     }
 
@@ -62,11 +69,33 @@ public class ChartController implements WebMvcConfigurer {
 
     @GetMapping("/viewChart")
     public String viewChart(Model model, @RequestParam int chartId) {
-        Chart chart = chartService.getChart(chartId);
-        String template = chartService.getChartTemplate(chart.getType());
-        model.addAttribute(template, true);
-        model.addAttribute("chart", chart);
-        return "ViewChart";
+        if(chartId <= 0){
+            model.addAttribute("error", true);
+            model.addAttribute("message", "Chart ID must be an integer greater than zero");
+            return "Error";
+        }
+        else{
+            Chart chart = chartService.getChart(chartId);
+
+            if(chart == null){
+                model.addAttribute("error", true);
+                model.addAttribute("message", "Chart not found");
+                return "Error";
+            }
+            else if(chart.getUserId() != getUserId()){
+                model.addAttribute("error", true);
+                model.addAttribute("message", "User not authorized to view this chart");
+                return "Error";
+            }
+            else{
+                String template = chartService.getChartTemplate(chart.getType());
+                model.addAttribute(template, true);
+                model.addAttribute("chart", chart);
+                return "ViewChart";
+            }
+
+        }
+
     }
 
     @GetMapping("/PostForm")
@@ -135,9 +164,15 @@ public class ChartController implements WebMvcConfigurer {
 
     @PostMapping( "/createChart")
     public String createChart(Model model, @ModelAttribute("chart") Chart chart) throws IOException {
-        String chartUrl = chartService.createChart(chart,getUserId());
-        model.addAttribute("posted", true);
-        model.addAttribute("chart", chart);
+        if(chartService.createChart(chart,getUserId())){
+            model.addAttribute("posted", true);
+            model.addAttribute("chart", chart);
+        }
+        else{
+            model.addAttribute("error", true);
+            model.addAttribute("message", "Failure to create chart");
+        }
+
         return "Chart";
     }
 
@@ -149,6 +184,10 @@ public class ChartController implements WebMvcConfigurer {
 
         if(updated)
             model.addAttribute("updated", true);
+        else{
+            model.addAttribute("error", true);
+            model.addAttribute("message", "Failure to update chart");
+        }
 
         model.addAttribute("chart", chart);
         return "ViewChart";
@@ -159,6 +198,11 @@ public class ChartController implements WebMvcConfigurer {
         boolean deleted = chartService.deleteChart(chartId);
         if(deleted)
             model.addAttribute("deleted", true);
+
+        else{
+            model.addAttribute("error", true);
+            model.addAttribute("message", "Failure to delete chart");
+        }
 
         List<Chart> charts = chartService.getCharts(getUserId());
         model.addAttribute(charts);

@@ -15,7 +15,7 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col">
-
+            <div th:insert="Error :: error"></div>
             <div class="row" th:if="${deleted}">
                 <div class="col">
                     <div class="alert alert-danger alert-dismissible fade show">

@@ -60,8 +60,14 @@ public class ChartControllerJSON  implements WebMvcConfigurer {
         }
 
         else{
-            String chartUrl = chartService.createChart(chart,1);
-            return ResponseEntity.ok("Successfully created new chart\nChart URL: " + chartUrl);
+            boolean created = chartService.createChart(chart,getUserId());
+            if(created)
+                return ResponseEntity.ok("Successfully created new chart\nChart URL: " + chart.getChartUrl());
+            else{
+                String message = "Failed to create chart or dataset";
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            }
+
         }
     }
 
