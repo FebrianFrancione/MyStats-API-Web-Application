@@ -1,0 +1,5 @@
+{
+  "dbURL": "jdbc:mysql://localhost:3306/stats_db?allowPublicKeyRetrieval=true&useSSL=false",
+  "username": "root",
+  "password": "1234"
+}

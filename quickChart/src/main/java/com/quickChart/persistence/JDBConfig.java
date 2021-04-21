@@ -1,13 +1,33 @@
 package com.quickChart.persistence;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.sql.*;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 
 public class JDBConfig {
     private Connection con = null;
     private PreparedStatement ps = null;
-    private String dbURL = "jdbc:mysql://localhost:3306/stats_db?allowPublicKeyRetrieval=true&useSSL=false";
-    private String username = "root";
-    private String password = "1234";
+    private String dbURL;
+    private String username;
+    private String password;
+    private String filepath;
+
+    public JDBConfig() {
+        try {
+            filepath = System.getProperty("user.dir") + "\\quickChart\\src\\main\\java\\com\\quickChart\\persistence\\config.json";
+            JsonReader jr = Json.createReader(new FileInputStream(filepath));
+            JsonObject jo = jr.readObject();
+            dbURL = jo.getString("dbURL");
+            username = jo.getString("username");
+            password = jo.getString("password");
+        } catch (FileNotFoundException e) {
+            System.out.println("Configuration file not found");
+            setDefaultConfig();
+        }
+    }
 
     static{
         try {
@@ -75,5 +95,11 @@ public class JDBConfig {
             }
         }
         close();
+    }
+
+    private void setDefaultConfig() {
+        dbURL = "jdbc:mysql://localhost:3306/stats_db?allowPublicKeyRetrieval=true&useSSL=false";
+        username = "root";
+        password = "1234";
     }
 }
