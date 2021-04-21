@@ -39,6 +39,14 @@ public class ChartServiceImpl implements ChartService{
     UserDao userDao = new UserDao();
     StatsDAO statsDao = new StatsDAO();
     private boolean update = false;
+    private static List<User> users = new ArrayList<>();
+
+    @Override
+    public List<User> getAllUsers(){
+        userDao.getAllUsers();
+        return users;
+    }
+
 
     @Override
     public void createUser(User user) {

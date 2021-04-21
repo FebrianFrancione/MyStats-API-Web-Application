@@ -55,6 +55,11 @@ public class ChartController implements WebMvcConfigurer {
         return "Home";
     }
 
+    @GetMapping( "/Landing")
+    public String showLandingPage() {
+        return "Landing";
+    }
+
     @GetMapping( "/Signup")
     public String showSignupPage(Model model) {
         model.addAttribute("user", new User());
@@ -64,7 +69,7 @@ public class ChartController implements WebMvcConfigurer {
     @PostMapping( "/createUser")
     public String showSignupPage(Model model, @ModelAttribute("album") User user) {
         chartService.createUser(user);
-        return "Home";
+        return "Landing";
     }
 
     @GetMapping("/viewChart")

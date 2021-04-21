@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+</head>
+<body>
+
+<div class="row">
+    <div class="col pb-2 mt-4 mb-2 border-bottom">
+        <h2>Welcome to Chart Repository Service</h2>
+    </div>
+    <a class="btn btn-danger btn-sm" th:href="@{/chart/}">Login</a>
+    <form class="form-inline my-2 mr-3 my-lg-0" th:action="@{/chart/Signup}" method="post">
+        <input class="nav-link" value="Signup" type="hidden" />
+        <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Signup</button>
+    </form>
+</div>
+</body>
+</html>

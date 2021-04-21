@@ -6,9 +6,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     UserDao dao = new UserDao();
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -20,5 +24,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         return new MyUserDetails(user);
     }
+
 
 }

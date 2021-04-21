@@ -22,4 +22,5 @@ public interface ChartService {
     public Chart uploadCSV(Chart chart, MultipartFile file);
     public boolean deleteChart(int chartId);
     void createUser(User user);
+    public List<User> getAllUsers();
 }

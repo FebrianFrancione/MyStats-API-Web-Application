@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.List;
@@ -35,6 +36,29 @@ public class ChartControllerJSON  implements WebMvcConfigurer {
         }else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Charts found!");
         }
+    }
+
+//    @GetMapping( "/Landing")
+//    @ResponseBody
+//    public ResponseEntity showLandingPage() {
+//        return ResponseEntity.ok("Landing page");
+//    }
+//
+//    @GetMapping( "/Signup")
+//    public ResponseEntity showSignupPage() {
+//
+//        return ResponseEntity.ok("Signup page");
+//    }
+
+    @PostMapping( "/createUser")
+    @ResponseBody
+    public ResponseEntity showSignupPage(@RequestPart("first_name") String first_name,@RequestPart("last_name") String last_name,@RequestPart("password") String password) {
+        User user = new User();
+        user.setFirst_name(first_name);
+        user.setLast_name(last_name);
+        user.setPassword(password);
+        chartService.createUser(user);
+        return ResponseEntity.ok("User created");
     }
 
     @GetMapping(value = "/viewChart/{chartId}")
