@@ -18,7 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/chart/json", produces = {MediaType.APPLICATION_JSON_VALUE}, method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
+@RequestMapping(value = "chart/json", produces = {MediaType.APPLICATION_JSON_VALUE}, method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
 public class ChartControllerJSON  implements WebMvcConfigurer {
     private ChartService chartService;
 
@@ -38,21 +38,9 @@ public class ChartControllerJSON  implements WebMvcConfigurer {
         }
     }
 
-//    @GetMapping( "/Landing")
-//    @ResponseBody
-//    public ResponseEntity showLandingPage() {
-//        return ResponseEntity.ok("Landing page");
-//    }
-//
-//    @GetMapping( "/Signup")
-//    public ResponseEntity showSignupPage() {
-//
-//        return ResponseEntity.ok("Signup page");
-//    }
-
     @PostMapping( "/createUser")
     @ResponseBody
-    public ResponseEntity showSignupPage(@RequestPart("first_name") String first_name,@RequestPart("last_name") String last_name,@RequestPart("password") String password) {
+    public ResponseEntity showSignupPage(@RequestPart("first_name") String first_name,@RequestPart("last_name") String last_name, @RequestPart("password") String password) {
         User user = new User();
         user.setFirst_name(first_name);
         user.setLast_name(last_name);

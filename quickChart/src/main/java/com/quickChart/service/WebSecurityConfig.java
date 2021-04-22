@@ -8,14 +8,16 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.security.Security;
+
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig{
-
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public UserDetailsServiceImpl userDetailsService() {
@@ -36,56 +38,44 @@ public class WebSecurityConfig{
         return authProvider;
     }
 
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authenticationProvider());
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .antMatchers("/chart/Landing").permitAll()
+                .antMatchers("/chart/Signup").permitAll()
+                .antMatchers("/chart/**").authenticated()
+                .anyRequest().permitAll()
+                .and()
+                .formLogin()
+                .defaultSuccessUrl("/chart/", true)
+                .and()
+                .logout().permitAll()
+                .logoutSuccessUrl("/chart/Landing/")
+                .and()
+                .csrf().disable();
+    }
+
+//this works for postman
+
 //    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.authenticationProvider(authenticationProvider());
+//    public void configure(HttpSecurity web) throws Exception {
+//        web.httpBasic()
+//                .and()
+//                .authorizeRequests()
+//                .antMatchers("/chart/json/createUser").permitAll()
+//                .antMatchers("/chart/json/**").authenticated()
+//                .anyRequest().permitAll()
+//                .and()
+//                .formLogin().permitAll()
+//                .defaultSuccessUrl("/chart/json/", true)
+//                .and()
+//                .logout().permitAll();
+//
 //    }
 
-
-
-
-    @Order(1)
-    @Configuration
-    public static class JSON extends WebSecurityConfigurerAdapter {
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            http.csrf().disable()
-                    .authorizeRequests()
-                    .antMatchers("/chart/json/createUser").permitAll()
-                    .antMatchers("/chart/json/**").authenticated()
-                    .anyRequest().permitAll()
-                    .and()
-                    .formLogin()
-                    .defaultSuccessUrl("/chart/json/", true)
-                    .and()
-                    .logout().permitAll()
-                    .and()
-                    .httpBasic();
-        }
-    }
-
-    @Order(2)
-    @Configuration
-    public static class Rest extends WebSecurityConfigurerAdapter {
-
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            http.authorizeRequests()
-                    .antMatchers( "/chart/Landing").permitAll()
-                    .antMatchers( "/chart/Signup").permitAll()
-                    .antMatchers( "/chart/Signup").permitAll()
-                    .antMatchers( "/chart/**").authenticated()
-                    .anyRequest().permitAll()
-                    .and()
-                    .formLogin()
-                    .defaultSuccessUrl("/chart/", true)
-                    .and()
-                    .logout().permitAll()
-                    .logoutSuccessUrl("/chart/Landing/")
-                    .and()
-                    .csrf().disable();
-            http.authorizeRequests();
-
-        }
-    }
 }
