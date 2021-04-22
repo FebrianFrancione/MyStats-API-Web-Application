@@ -4,7 +4,7 @@ Web-Application that integrates the QuickChart API and allows a client to create
 
 ## Created By
 
-Ivan Gerasymenko, Febrian Francione, Kiho Lee (Team Leader)
+Ivan Gerasymenko - 27006284 , Febrian Francione - 40049253, Kiho Lee (Team Leader) - 40073402
 
 ## Built With
 
