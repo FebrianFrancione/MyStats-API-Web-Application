@@ -123,7 +123,7 @@ public class StatsDAO {
 
     public Chart getChart(int chartId){
         Chart chart = null;
-        String sql = "SELECT charts.*, datasets.* FROM charts JOIN datasets ON chart_id=datasets.chart_id WHERE chart_id=?";
+        String sql = "SELECT charts.*, datasets.* FROM charts JOIN datasets ON charts.chart_id=datasets.chart_id WHERE charts.chart_id=?";
         statement = jdbc.prepareStatement(sql);
         ResultSet rs = null;
 
