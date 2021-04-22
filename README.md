@@ -4,7 +4,7 @@ Web-Application that integrates the QuickChart API and allows a client to create
 
 ## Created By
 
-Ivan Gerasymenko - 27006284 , Febrian Francione - 40049253, Kiho Lee (Team Leader) - 40073402
+Ivan Garzon - 27006284 , Febrian Francione - 40049253, Kiho Lee (Team Leader) - 40073402
 
 ## Built With
 
@@ -719,7 +719,7 @@ Update an existing chart sent as JSON format data.
 - Error Response:
   - Status Code: 404
   - Content :
-        Failed to update chart or dataset
+    Failed to update chart or dataset
 
 ### Delete Chart
 
